@@ -3,47 +3,63 @@ using UnityEngine;
 public class PlayerStateMachine:MonoBehaviour
 {
     private PlayerInputHandler actions;
+    private PlayerController controller;
+    private Animator animator;
+
+    private float deadZone = 0.3f;
     
-    [Header("State")]
     public PlayerIdleState IdleState {get; private set;}
     public PlayerMoveState MoveState{get; private set;}
-    public PlayerAttackState AttackState{get; private set;}
-    public PlayerJumpState JumpState{get; private set;}
-    public PlayerWalkState WalkState{get; private set;}
-    public PlayerCrouchState CrouchState{get; private set;}
     
-    IState currentState;
-    
-    public IState CurrentState => currentState;
+    public IState CurrentState {get; private set;}
 
     private void Awake()
     {
-        actions = GetComponent<PlayerInputHandler>();
-        SetState(actions);
+        GetComponents();
+        
+        SetState(controller,actions,animator);
         
         ChangeState(IdleState);
     }
-    
-    private void SetState(PlayerInputHandler action)
+
+    private void GetComponents()
     {
-        IdleState = new PlayerIdleState(action);
-        MoveState = new PlayerMoveState(action);
-        AttackState = new PlayerAttackState(action);
-        JumpState = new PlayerJumpState(action);
-        WalkState = new PlayerWalkState(action);
-        CrouchState = new PlayerCrouchState(action);
+        actions = GetComponent<PlayerInputHandler>();
+        controller = GetComponent<PlayerController>();
+        animator = GetComponentInChildren<Animator>();
+    }
+    
+    private void SetState(PlayerController _controller, PlayerInputHandler _action,  Animator _animator)
+    {
+        IdleState = new PlayerIdleState(_controller, _action,_animator);
+        MoveState = new PlayerMoveState(_controller, _action,_animator);
     }
     
     private void Update()
     {
-        currentState?.Update();
+        CurrentState?.Update();
+        ChangeMovementState();
     }
 
-    public void ChangeState(IState newStateMachine)
+    private void ChangeState(IState newStateMachine)
     {
-        currentState?.Exit();
-        currentState = newStateMachine;
-        currentState?.Enter();
+        CurrentState?.Exit();
+        CurrentState = newStateMachine;
+        CurrentState?.Enter();
+    }
+
+    private void ChangeMovementState()
+    {
+        if(Mathf.Abs(actions.Move.x) <= deadZone && Mathf.Abs(actions.Move.y) <= deadZone) 
+        {
+            if (CurrentState == IdleState) return;
+            ChangeState(IdleState);
+        }
+        else 
+        {
+            if (CurrentState == MoveState) return;
+            ChangeState(MoveState);
+        }
     }
 }
 
