@@ -6,6 +6,8 @@ public class PlayerInputHandler:MonoBehaviour
     [Header("Input")]
     public Vector2 Move{get; private set;}
     public Vector2 Look{get; private set;}
+    public bool Fire{get; private set;}
+    public bool Reload{get; private set;}
     public bool Crouch{get; private set;}
     public bool Jump{get; private set;}
     public bool Walk{get; private set;}
@@ -24,10 +26,15 @@ public class PlayerInputHandler:MonoBehaviour
         actions.Player.Crouch.performed += ctx => Crouch = true;
         actions.Player.Jump.performed += ctx => Jump = true;
         actions.Player.Walk.performed += ctx => Walk = true;
+        actions.Player.Attack.performed += ctx => Fire = true;
+        actions.Player.Reload.performed += ctx => Reload = true;
         
         actions.Player.Crouch.canceled += ctx => Crouch = false;
         actions.Player.Jump.canceled += ctx => Jump = false;
         actions.Player.Walk.canceled += ctx => Walk = false;
+        
+        actions.Player.Attack.canceled += ctx => Fire = false;
+        actions.Player.Reload.canceled += ctx => Reload = false;
     }
 
     private void Update()

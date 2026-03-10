@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private float sensitivity;
+    [SerializeField] private WeaponBase currentWeapon;
     
     private Animator animator;
     
@@ -80,6 +81,16 @@ public class PlayerController : MonoBehaviour
             prevCrouch = isCrunch;
         }
         UpdateCameraPos();
+        if (inputHandler.Fire) 
+        {
+            currentWeapon.Fire();
+            
+        }
+
+        if (inputHandler.Reload) 
+        {
+            currentWeapon.Reload();
+        }
         Gravity();
         Jump();
     }
