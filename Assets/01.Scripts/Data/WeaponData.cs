@@ -4,6 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Datas/WeaponData")]
 public class WeaponData : ScriptableObject
 {
+    public GameObject prefab;
+    
+    public enum WeaponType { Primary, Secondary, Melee }
+    public WeaponType weaponType;
     
     public RuntimeAnimatorController animatorController;
     
@@ -13,7 +17,7 @@ public class WeaponData : ScriptableObject
     public int maxReserve;
     
     public float spread;
-    public float damage;
+    public int damage;
     public float range;
     public float fireRate;
     

@@ -4,20 +4,28 @@ using UnityEngine;
 public abstract class WeaponBase:MonoBehaviour
 {
         [SerializeField] protected WeaponData weaponData;
+        
         protected Animator anim;
-        protected int currentAmmo;
-        protected int reserveAmmo;
+        public int currentAmmo {get; protected set;}
+        public int reserveAmmo {get; protected set;}
+        
+        public WeaponData.WeaponType weaponType {get; protected set;}
         
         protected bool isReloading;
         
         protected float lastFireTime;
         
         protected  Camera cam;
+
+        public event Action<int,int> OnAmmoChanged;
+        
         private void Awake()
         {
                 cam = Camera.main;
                 anim = GetComponentInParent<Animator>();
+                currentAmmo = weaponData.magazineSize;
                 reserveAmmo = weaponData.maxReserve;
+                weaponType = weaponData.weaponType;
 
                 anim.runtimeAnimatorController = weaponData.animatorController;
         }
@@ -27,6 +35,7 @@ public abstract class WeaponBase:MonoBehaviour
         public virtual void Reload()
         {
                 if (reserveAmmo <= 0 || isReloading) return;
+                if (currentAmmo == weaponData.magazineSize) return;
 
                 StartCoroutine(ReloadAnimaion());
         }
@@ -44,8 +53,15 @@ public abstract class WeaponBase:MonoBehaviour
                 
                 reserveAmmo -= fillAmmo;
                 currentAmmo += fillAmmo;
+
+                InvokeAmmoChanged();
                 
                 isReloading = false;
+        }
+        
+        protected void InvokeAmmoChanged()
+        {
+                OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
         }
 }
 

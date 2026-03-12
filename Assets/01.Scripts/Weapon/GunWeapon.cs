@@ -12,16 +12,24 @@ public class GunWeapon:WeaponBase
         anim.Play("Fire");
         
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        Vector2 offSet = Random.insideUnitCircle * weaponData.spread;
+        Vector3 direction = (ray.direction + new Vector3(offSet.x, offSet.y, 0)).normalized;
+        
         RaycastHit hit;
         
-        if (Physics.Raycast(ray, out hit, weaponData.range)) 
+        if (Physics.Raycast(ray.origin , direction, out hit, weaponData.range)) 
         {
-            if (hit.collider.gameObject.CompareTag("Player")) 
-            {
-                Debug.Log((weaponData.damage));    
+            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+            if (damageable != null) 
+            { 
+                damageable.TakeDamage(weaponData.damage);
             }
         }
         currentAmmo--;
+
+        InvokeAmmoChanged();
+        
         lastFireTime = Time.time;
     }
 }

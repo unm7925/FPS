@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040e3958d4b92784b870c0f9787d2060, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  animatorController: {fileID: 0}
-  reloadTime: 0
-  magazineSize: 0
-  maxReserve: 0
-  spread: 0
-  damage: 0
-  range: 0
-  fireRate: 0
+  prefab: {fileID: 3657650553737180953, guid: f518f2f6afb26914288125250b5d7fb3, type: 3}
+  weaponType: 1
+  animatorController: {fileID: 22100000, guid: 5338093fda84145428cf49d25915392c, type: 2}
+  reloadTime: 1
+  magazineSize: 12
+  maxReserve: 60
+  spread: 0.5
+  damage: 15
+  range: 30
+  fireRate: 1

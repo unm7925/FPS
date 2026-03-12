@@ -14,6 +14,8 @@ public class PlayerInputHandler:MonoBehaviour
 
     InputSystem_Actions actions;
     
+    public event Action<int> OnSlotChanged;
+    
     private void Awake()
     {
         actions = new InputSystem_Actions();
@@ -32,9 +34,12 @@ public class PlayerInputHandler:MonoBehaviour
         actions.Player.Crouch.canceled += ctx => Crouch = false;
         actions.Player.Jump.canceled += ctx => Jump = false;
         actions.Player.Walk.canceled += ctx => Walk = false;
-        
         actions.Player.Attack.canceled += ctx => Fire = false;
         actions.Player.Reload.canceled += ctx => Reload = false;
+        
+        actions.Player.Slot1.performed += ctx => OnSlotChanged?.Invoke(0);
+        actions.Player.Slot2.performed += ctx => OnSlotChanged?.Invoke(1);
+        actions.Player.Slot3.performed += ctx => OnSlotChanged?.Invoke(2);
     }
 
     private void Update()
@@ -49,4 +54,3 @@ public class PlayerInputHandler:MonoBehaviour
         actions.Dispose();
     }
 }
-
