@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040e3958d4b92784b870c0f9787d2060, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  prefab: {fileID: 3657650553737180953, guid: f518f2f6afb26914288125250b5d7fb3, type: 3}
+  prefab: {fileID: 2298346596434453105, guid: 4dda21c0a6e0ed444bfc0bd421b4e870, type: 3}
   equipPosition: {x: -0.194, y: -0.019, z: 0.231}
   equipRotation: {x: 0.14909965, y: -0.05658509, z: -0.1453243, w: -0.97644675}
   weaponType: 0
@@ -20,7 +20,11 @@ MonoBehaviour:
   reloadTime: 2
   magazineSize: 30
   maxReserve: 60
-  spread: 0.5
   damage: 30
   range: 50
   fireRate: 0.3
+  spreadIdle: 0.007
+  spreadCrouch: 0.005
+  spreadJump: 0.1
+  spreadMove: 0.03
+  maxSpread: 0.25

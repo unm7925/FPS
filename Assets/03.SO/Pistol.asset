@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   prefab: {fileID: 3657650553737180953, guid: f518f2f6afb26914288125250b5d7fb3, type: 3}
+  equipPosition: {x: 0, y: 0, z: 0}
+  equipRotation: {x: 0, y: 0, z: 0, w: 1}
   weaponType: 1
   animatorController: {fileID: 22100000, guid: 5338093fda84145428cf49d25915392c, type: 2}
   reloadTime: 1
   magazineSize: 12
   maxReserve: 60
-  spread: 0.5
   damage: 15
   range: 30
   fireRate: 1
+  spreadIdle: 0.05
+  spreadCrouch: 0.01
+  spreadJump: 0.1
+  spreadMove: 0.05
+  maxSpread: 0.25

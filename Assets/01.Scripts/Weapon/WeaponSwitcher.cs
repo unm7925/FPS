@@ -35,11 +35,6 @@ public class WeaponSwitcher : MonoBehaviour
         playerInputHandler.OnWeaponDrop -= DropWeapon;
     }
 
-    private void Start()
-    {
-        
-    }
-
     private void DefaultWeaponSet()
     {
         GameObject weapon = Instantiate(defaultWeaponData.prefab, weaponHolder);
@@ -83,7 +78,6 @@ public class WeaponSwitcher : MonoBehaviour
         {
             _weapon.gameObject.SetActive(false);
         }
-        Debug.Log("add");
     }
 
     private void DropWeapon()

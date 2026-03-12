@@ -20,8 +20,9 @@ public class HUDController:MonoBehaviour
         private void OnDisable()
         {
                 hp.OnHPChanged -= UpdateHP;
-                currentWeapon.OnAmmoChanged -= UpdateAmmo;
                 weaponSwitcher.OnWeaponChanged -= SwitchWeaponEvent;
+                if (currentWeapon == null) return;
+                currentWeapon.OnAmmoChanged -= UpdateAmmo;
         }
         private void SwitchWeaponEvent(WeaponBase weaponBase)
         {

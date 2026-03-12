@@ -1,7 +1,4 @@
 using System;
-using System.Numerics;
-using Unity.Android.Gradle.Manifest;
-using UnityEditor.Searcher;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -65,6 +62,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+    
 
     private void Start()
     {
@@ -97,6 +95,8 @@ public class PlayerController : MonoBehaviour
         {
             weaponSwitcher.currentWeapon.Reload();
         }
+        
+        weaponSwitcher.currentWeapon.SetSpreadState(GetCurrentState(),inputHandler.Move.magnitude);
         
         
     }
@@ -132,6 +132,13 @@ public class PlayerController : MonoBehaviour
             controller.center = Vector3.zero;
             targetCamPos =  standCamPos;
         }
+    }
+
+    private WeaponBase.SpreadState GetCurrentState()
+    {
+        if (!controller.isGrounded) return WeaponBase.SpreadState.Jump;
+        if (isCrunch) return WeaponBase.SpreadState.Crouch;
+        return WeaponBase.SpreadState.Idle;
     }
 
     void Move(Vector2 input)
