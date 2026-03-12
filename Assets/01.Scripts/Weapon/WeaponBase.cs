@@ -22,11 +22,18 @@ public abstract class WeaponBase:MonoBehaviour
         private void Awake()
         {
                 cam = Camera.main;
-                anim = GetComponentInParent<Animator>();
+                ApplyAnimator();
                 currentAmmo = weaponData.magazineSize;
                 reserveAmmo = weaponData.maxReserve;
                 weaponType = weaponData.weaponType;
 
+                
+        }
+
+        public void ApplyAnimator()
+        { 
+                anim = GetComponentInParent<Animator>();
+                if (anim == null) return;
                 anim.runtimeAnimatorController = weaponData.animatorController;
         }
 
@@ -62,6 +69,21 @@ public abstract class WeaponBase:MonoBehaviour
         protected void InvokeAmmoChanged()
         {
                 OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+        }
+        
+        public void CancelAct()
+        {
+                anim.Play("Select");
+            if (isReloading == false) return;
+            
+            isReloading = false;
+            StopAllCoroutines();
+        }
+
+        public void ChangeTrans()
+        {
+                transform.localPosition = weaponData.equipPosition;
+                transform.localRotation = weaponData.equipRotation;
         }
 }
 

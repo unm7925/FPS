@@ -11,13 +11,12 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private float sensitivity;
-    [SerializeField] private WeaponBase currentWeapon;
     
     private Animator animator;
     
     private float xRotation=0;
-    
-    
+
+    private WeaponSwitcher weaponSwitcher;
     private PlayerStateMachine stateMachine;
     private PlayerInputHandler inputHandler;
     private CharacterController controller;
@@ -61,6 +60,7 @@ public class PlayerController : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -73,26 +73,32 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
+        UpdateCameraPos();
+
+        if (animator == null) return;
         GetCurrentBool();
         if (prevCrouch != isCrunch) 
         {
             IsCrunch();
             prevCrouch = isCrunch;
         }
-        UpdateCameraPos();
-        if (inputHandler.Fire) 
-        {
-            currentWeapon.Fire();
-            
-        }
-
-        if (inputHandler.Reload) 
-        {
-            currentWeapon.Reload();
-        }
+       
+        
         Gravity();
         Jump();
+
+        if (weaponSwitcher.currentWeapon == null) return;
+        if (inputHandler.Fire) 
+        {
+            weaponSwitcher.currentWeapon.Fire();
+            
+        }
+        if (inputHandler.Reload) 
+        {
+            weaponSwitcher.currentWeapon.Reload();
+        }
+        
+        
     }
 
     private void LateUpdate()
@@ -154,7 +160,7 @@ public class PlayerController : MonoBehaviour
         isCrunch = inputHandler.Crouch;
         animator.SetBool("IsCrouching", isCrunch);
         isWalk = inputHandler.Walk;
-        animator.SetBool("IsWalking", isWalk);
+        
     }
 
     public float GetCurrentSpeed()

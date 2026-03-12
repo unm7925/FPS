@@ -15,6 +15,7 @@ public class PlayerInputHandler:MonoBehaviour
     InputSystem_Actions actions;
     
     public event Action<int> OnSlotChanged;
+    public event Action OnWeaponDrop;
     
     private void Awake()
     {
@@ -40,6 +41,8 @@ public class PlayerInputHandler:MonoBehaviour
         actions.Player.Slot1.performed += ctx => OnSlotChanged?.Invoke(0);
         actions.Player.Slot2.performed += ctx => OnSlotChanged?.Invoke(1);
         actions.Player.Slot3.performed += ctx => OnSlotChanged?.Invoke(2);
+        
+        actions.Player.Drop.performed += ctx => OnWeaponDrop?.Invoke();
     }
 
     private void Update()

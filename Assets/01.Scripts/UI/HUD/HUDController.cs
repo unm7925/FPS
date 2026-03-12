@@ -4,25 +4,41 @@ using UnityEngine;
 public class HUDController:MonoBehaviour
 {
         [SerializeField] private HP hp;
-        [SerializeField] private WeaponBase weaponBase;
+        [SerializeField] private WeaponSwitcher weaponSwitcher;
         
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private TextMeshProUGUI HPText;
 
+        private WeaponBase currentWeapon;
         private void OnEnable()
         {
                 hp.OnHPChanged += UpdateHP;
-                weaponBase.OnAmmoChanged += UpdateAmmo;
+                weaponSwitcher.OnWeaponChanged += SwitchWeaponEvent;
+                
         }
-        private void Start()
-        {
-                UpdateHP(hp.maxHP);
-                UpdateAmmo(weaponBase.currentAmmo,weaponBase.reserveAmmo);
-        }
+        
         private void OnDisable()
         {
                 hp.OnHPChanged -= UpdateHP;
-                weaponBase.OnAmmoChanged -= UpdateAmmo;
+                currentWeapon.OnAmmoChanged -= UpdateAmmo;
+                weaponSwitcher.OnWeaponChanged -= SwitchWeaponEvent;
+        }
+        private void SwitchWeaponEvent(WeaponBase weaponBase)
+        {
+                if (weaponBase == null) return;
+                if (currentWeapon != null) 
+                {
+                        currentWeapon.OnAmmoChanged -= UpdateAmmo;
+                }
+                currentWeapon = weaponBase;
+                currentWeapon.OnAmmoChanged += UpdateAmmo;
+                UpdateAmmo(currentWeapon.currentAmmo,currentWeapon.reserveAmmo);
+        }
+        private void Start()
+        {
+                SwitchWeaponEvent(weaponSwitcher.currentWeapon);
+                UpdateHP(hp.maxHP);
+                UpdateAmmo(currentWeapon.currentAmmo,currentWeapon.reserveAmmo);
         }
         private void UpdateAmmo(int currentAmmo, int reserveAmmo)
         {

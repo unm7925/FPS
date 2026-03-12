@@ -5,6 +5,9 @@ using UnityEngine;
 public class WeaponData : ScriptableObject
 {
     public GameObject prefab;
+
+    public Vector3 equipPosition = Vector3.zero;
+    public Quaternion equipRotation = Quaternion.identity;
     
     public enum WeaponType { Primary, Secondary, Melee }
     public WeaponType weaponType;
