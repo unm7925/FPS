@@ -26,10 +26,15 @@ public class WeaponData : ScriptableObject
     public float range;
     public float fireRate;
 
-    [Header("탄퍼짐 종류")] 
+    [Header("상태에 따른 탄퍼짐")] 
     public float spreadIdle;
     public float spreadCrouch;
     public float spreadJump;
     public float spreadMove;
     public float maxSpread;
+
+    [Header("연사에 의한 탄퍼짐")]
+    public float recoilIncrement;
+    public float recoverDelay;
+    public float recoverRate;
 }

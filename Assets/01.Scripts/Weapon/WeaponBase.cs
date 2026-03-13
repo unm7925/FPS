@@ -35,6 +35,10 @@ public abstract class WeaponBase:MonoBehaviour
 
         protected float finalSpread;
         
+        protected float recoilIncrement;
+        protected float recoilSpread =0;
+        protected float recoverDelay;
+        protected float recoverRate;
         
         
         protected bool isReloading;
@@ -45,11 +49,19 @@ public abstract class WeaponBase:MonoBehaviour
 
         public event Action<int,int> OnAmmoChanged;
         
-        private void Awake()
+        protected virtual void Awake()
         {
                 cam = Camera.main;
                 ApplyAnimator();
                 Initialize();
+        }
+
+        private void Update()
+        {
+                if (Time.time - lastFireTime > recoverDelay && recoilSpread >0) 
+                {
+                        recoilSpread = Mathf.Max(0, recoilSpread - recoverRate*Time.deltaTime);
+                }
         }
 
         protected virtual void Initialize()
@@ -69,7 +81,10 @@ public abstract class WeaponBase:MonoBehaviour
                 spreadJump = weaponData.spreadJump;
                 spreadMove = weaponData.spreadMove;
                 maxSpread = weaponData.maxSpread;
-                
+
+                recoilIncrement = weaponData.recoilIncrement;
+                recoverRate = weaponData.recoverRate;
+                recoverDelay = weaponData.recoverDelay;
         }
 
         public void ApplyAnimator()
@@ -130,18 +145,17 @@ public abstract class WeaponBase:MonoBehaviour
 
         public void SetSpreadState(SpreadState state,float speedRatio)
         {
-                if (state == SpreadState.Idle) 
-                {
-                        finalSpread = Mathf.Min(spreadIdle + speedRatio * spreadMove,maxSpread);
-                }
-                else if (state == SpreadState.Crouch) 
-                {
-                        finalSpread =  Mathf.Min(spreadCrouch + speedRatio * spreadMove,maxSpread);        
-                }
-                else 
-                {
-                        finalSpread =  Mathf.Min(spreadJump + speedRatio * spreadMove,maxSpread);
-                }
+                finalSpread = Mathf.Min(GetBaseSpread(state) + speedRatio * spreadMove + recoilSpread,maxSpread);
+        }
+
+        private float GetBaseSpread(SpreadState state)
+        {
+                if (state == SpreadState.Jump)
+                        return spreadJump;
+                if (state == SpreadState.Crouch) 
+                        return spreadCrouch;
+                 
+                return spreadIdle;
         }
 }
 

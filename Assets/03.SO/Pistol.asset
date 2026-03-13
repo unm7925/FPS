@@ -22,9 +22,12 @@ MonoBehaviour:
   maxReserve: 60
   damage: 15
   range: 30
-  fireRate: 1
+  fireRate: 0.6
   spreadIdle: 0.05
   spreadCrouch: 0.01
   spreadJump: 0.1
   spreadMove: 0.05
   maxSpread: 0.25
+  recoilIncrement: 0.08
+  recoverDelay: 1
+  recoverRate: 1

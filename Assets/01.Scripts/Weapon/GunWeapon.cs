@@ -13,10 +13,10 @@ public class GunWeapon:WeaponBase
         
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
+        Debug.Log(finalSpread);
+        
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
         Vector3 direction = (ray.direction + new Vector3(offSet.x, offSet.y, 0)).normalized;
-        
-        Debug.Log(finalSpread);
         
         RaycastHit hit;
         
@@ -29,7 +29,8 @@ public class GunWeapon:WeaponBase
             }
         }
         currentAmmo--;
-
+        recoilSpread += recoilIncrement;
+        
         InvokeAmmoChanged();
         
         lastFireTime = Time.time;
