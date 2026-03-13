@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 public class GameManager:MonoBehaviour
 {
+        public event Action<Team> OnGameEnd;
+        
         public static GameManager Instance;
 
         public enum Team
@@ -55,10 +58,25 @@ public class GameManager:MonoBehaviour
                 if (team == Team.TeamA) 
                 {
                         teamAList.Remove(player);
+                        
                 }
                 else 
                 {
                         teamBList.Remove(player);
+                        
+                }
+
+                CheckWinCondition();
+        }
+        private void CheckWinCondition()
+        {
+                if (teamAList.Count == 0) 
+                {
+                        OnGameEnd?.Invoke(Team.TeamB);                                
+                }
+                if (teamBList.Count == 0) 
+                {
+                        OnGameEnd?.Invoke(Team.TeamA);                         
                 }
         }
 }

@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayPanel : MonoBehaviour
@@ -56,5 +57,10 @@ public class PlayPanel : MonoBehaviour
             panels[i].DOFade(1, fadeSpeed);
         }
         
+    }
+
+    public void OnClick()
+    {
+        SceneManager.LoadScene(1);
     }
 }
