@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private PlayerStateMachine stateMachine;
     private PlayerInputHandler inputHandler;
     private CharacterController controller;
+    private HP hp;
 
     Vector3 velocity = Vector3.zero;
     Vector3 horizontalVelocity = Vector3.zero;
@@ -58,18 +59,30 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
-        
+        hp = GetComponent<HP>();
         
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    
 
     private void Start()
     {
         GameManager.Instance.RegisterTeam(gameObject, GameManager.Team.TeamA);
         StandardSet();
+    }
+
+    private void OnEnable()
+    {
+        hp.OnDie += UnregisterPlayer;
+    }
+    private void OnDisable()
+    {
+        hp.OnDie -=  UnregisterPlayer;
+    }
+    private void UnregisterPlayer()
+    {
+        GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamA, gameObject);
     }
 
     void Update()

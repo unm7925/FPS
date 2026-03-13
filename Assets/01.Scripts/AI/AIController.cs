@@ -15,6 +15,8 @@ public class AIController : MonoBehaviour
         
         private EnemySight enemySight;
 
+        private HP hp;
+
         private float sightInterval = 0.2f;
 
         List<GameObject> players = new List<GameObject>();
@@ -28,7 +30,19 @@ public class AIController : MonoBehaviour
                 animator = GetComponent<Animator>();
                 enemySight = GetComponent<EnemySight>();
                 currentWeapon = GetComponentInChildren<BotGunWeapon>();
-
+                hp = GetComponent<HP>();
+        }
+        private void OnEnable()
+        {
+                hp.OnDie += UnRegisterPlayer;
+        }
+        private void OnDisable()
+        {
+                hp.OnDie -= UnRegisterPlayer;
+        }
+        private void UnRegisterPlayer()
+        {
+                GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamB, gameObject);
         }
         private void Start()
         {

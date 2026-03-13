@@ -49,5 +49,17 @@ public class GameManager:MonoBehaviour
                         return teamAList;
                 }
         }
+
+        public void UnRegisterEnemies(Team team,GameObject player)
+        {
+                if (team == Team.TeamA) 
+                {
+                        teamAList.Remove(player);
+                }
+                else 
+                {
+                        teamBList.Remove(player);
+                }
+        }
 }
 
