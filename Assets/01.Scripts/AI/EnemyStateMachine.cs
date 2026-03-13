@@ -6,7 +6,7 @@ public class EnemyStateMachine:MonoBehaviour
     
     public EnemyAttackState enemyAttackState {get;private set;}
     public EnemyIdleState enemyIdleState {get;private set;}
-    public EnemyMoveState enemyMoveState {get;private set;}
+    public EnemyStrafState EnemyStrafState {get;private set;}
     public EnemyPatrolState enemyPatrolState {get;private set;}
     public EnemySearchState enemySearchState {get;private set;}
     
@@ -15,10 +15,11 @@ public class EnemyStateMachine:MonoBehaviour
     private void Awake()
     {
         aiController = GetComponent<AIController>();
-        Initialize();
+        
     }
     private void Start()
     {
+        Initialize();
         ChangeState(enemyPatrolState);
     }
 
@@ -32,7 +33,7 @@ public class EnemyStateMachine:MonoBehaviour
         enemyPatrolState = new EnemyPatrolState(aiController);
         enemyAttackState = new EnemyAttackState(aiController);
         enemyIdleState = new EnemyIdleState(aiController);
-        enemyMoveState = new EnemyMoveState(aiController);
+        EnemyStrafState = new EnemyStrafState(aiController);
         enemySearchState = new EnemySearchState(aiController);
     }
 

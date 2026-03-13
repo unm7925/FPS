@@ -74,7 +74,7 @@ public abstract class WeaponBase:MonoBehaviour
                 maxReserve = weaponData.maxReserve;
                 fireRate = weaponData.fireRate;
                 damage = weaponData.damage;
-                range = weaponData.range;
+                range = 200f;                   // 임시
                 
                 spreadIdle = weaponData.spreadIdle;
                 spreadCrouch = weaponData.spreadCrouch;

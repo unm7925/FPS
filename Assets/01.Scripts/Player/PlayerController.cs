@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
         
+        
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.RegisterTeam(gameObject, GameManager.Team.TeamA);
         StandardSet();
     }
 
@@ -193,7 +196,7 @@ public class PlayerController : MonoBehaviour
         float currentJumpForce = jumpForce;
         if(isCrunch)
         {
-            return currentJumpForce *= crouchJumpMult;
+            return currentJumpForce * crouchJumpMult;
         }
         else 
         {

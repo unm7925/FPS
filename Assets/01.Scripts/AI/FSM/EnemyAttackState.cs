@@ -7,7 +7,7 @@
     }
     public void Enter()
     {
-        
+        aiController.FireAndStrafe();
     }
     public void Update()
     {
@@ -15,6 +15,6 @@
     }
     public void Exit()
     {
-        
+        aiController.StopAllCoroutines();
     }
 }

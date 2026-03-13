@@ -1,13 +1,25 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
-public class AIController:MonoBehaviour
+using Random = UnityEngine.Random;
+public class AIController : MonoBehaviour
 {
         private EnemyStateMachine enemyStateMachine;
-        private Animator animator;
-        private NavMeshAgent agent;
+        public Animator animator {get; private set;}
+        public NavMeshAgent agent {get; private set;}
+
+        private BotGunWeapon currentWeapon;
+        
         private EnemySight enemySight;
+
+        private float sightInterval = 0.2f;
+
+        List<GameObject> players = new List<GameObject>();
+        
+        public GameObject currentTarget {get; private set;}
 
         private void Awake()
         {
@@ -15,10 +27,119 @@ public class AIController:MonoBehaviour
                 agent = GetComponent<NavMeshAgent>();
                 animator = GetComponent<Animator>();
                 enemySight = GetComponent<EnemySight>();
+                currentWeapon = GetComponentInChildren<BotGunWeapon>();
+
+        }
+        private void Start()
+        {
+                GameManager.Instance.RegisterTeam(gameObject, GameManager.Team.TeamB);
+                StartDetectTarget();
+        }
+        private void Update()
+        {
+                UpdateAnimator();
+                if (currentTarget != null) 
+                {
+                        transform.LookAt(currentTarget.transform.position);
+                        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+                }
         }
 
-        // 적 발견 시 패트롤로 전환 ( 레이 쏘기 , 장애물 있으면 인식x )
-        // 패트롤 랜덤 갔다가 idle ( 주변 둘러보기 시야각 쿼터니언 돌리기 천천히 )
-        // 
+        private void UpdateAnimator()
+        {
+                Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity);
+                localVelocity /= agent.speed;
+                localVelocity *= 7f;
+                animator.SetFloat("Speed", localVelocity.z,0.1f,Time.deltaTime);
+                animator.SetFloat("Direction", localVelocity.x,0.1f,Time.deltaTime);
+        }
+        public void StartStrafeMove(float strafeDistance, float strafeTime)
+        {
+                
+                if (currentTarget == null) return;
+                StartCoroutine(StrafeMove(strafeDistance,strafeTime));
+        }
+        private IEnumerator StrafeMove(float strafeDistance, float strafeTime)
+        {
+                agent.isStopped = false;
+                agent.updateRotation = false;
+                int moveX = Random.Range(0, 2) == 0 ? 1 : -1;
+                Vector3 direction = currentTarget.transform.position - transform.position;
+                Vector3 move = Vector3.Cross(direction, Vector3.up).normalized;
+                agent.SetDestination(transform.position + move * strafeDistance * moveX);
+                
+                yield return new WaitForSeconds(strafeTime);
+                LoseTarget();
+        }
+
+        public void StartDetectTarget()
+        {
+                StartCoroutine(DetectTarget());
+        }
+        private IEnumerator DetectTarget()
+        {
+                while (true) 
+                {
+                        foreach (var teamA in GameManager.Instance.GetEnemeies(GameManager.Team.TeamB)) 
+                        {
+                                if (enemySight.CanSeeTarget(teamA)) 
+                                {
+                                        currentTarget = teamA;
+                                        enemyStateMachine.ChangeState(enemyStateMachine.enemyAttackState);
+                                        yield break;
+                                }
+                        }
+                        yield return new WaitForSeconds(sightInterval);
+                }
+        }
+        public void FireAndStrafe()
+        {
+                agent.isStopped = true;
+                currentWeapon.Fire();
+                enemyStateMachine.ChangeState(enemyStateMachine.EnemyStrafState);
+        }
+
+
+
+        private void LoseTarget()
+        {
+                
+                if (currentTarget == null) 
+                {
+                        enemyStateMachine.ChangeState(enemyStateMachine.enemyPatrolState);
+                        agent.updateRotation = true;
+                        return;
+                }
+
+                if (!enemySight.CanSeeTarget(currentTarget)) 
+                {
+                        currentTarget = null;
+                        enemyStateMachine.ChangeState(enemyStateMachine.enemySearchState);
+                        agent.updateRotation = true;
+                        return;
+                }
+                enemyStateMachine.ChangeState(enemyStateMachine.enemyAttackState);
+        }
+        
+        public void StartSearchRotate(float speed, float time)
+        {
+                StartCoroutine(SearchRotate(speed, time));
+        }
+        
+        private IEnumerator SearchRotate(float speed, float time)
+        {
+                while (true) 
+                {
+                        time -= Time.deltaTime;
+                        if (time <= 0) 
+                        {
+                                enemyStateMachine.ChangeState(enemyStateMachine.enemyPatrolState);
+                                yield break;
+                        }
+                        
+                        transform.Rotate(Vector3.up, speed * Time.deltaTime);
+                        yield return null;
+                }
+        }
 }
 

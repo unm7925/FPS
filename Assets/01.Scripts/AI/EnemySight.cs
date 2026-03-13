@@ -1,18 +1,12 @@
 ﻿using UnityEngine;
 public class EnemySight:MonoBehaviour
 {
-        float sightRange = 20;
+        float sightRange = 200;
         float sightAngle = 90;
-        Transform target;
 
-        public bool CanSeeTarget()
+        public bool CanSeeTarget(GameObject target)
         {
-                float distance = Vector3.Distance(transform.position, target.position);
-                if (distance > sightRange) 
-                {
-                        return false;
-                }
-                Vector3 direction = (target.position - transform.position).normalized;
+                Vector3 direction = (target.transform.position - transform.position).normalized;
                 float angle = Vector3.Angle(transform.forward, direction);
                 if ((sightAngle / 2) < angle) 
                 {
