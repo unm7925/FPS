@@ -51,9 +51,13 @@ public abstract class WeaponBase:MonoBehaviour
         
         protected virtual void Awake()
         {
-                cam = Camera.main;
+                Init();
                 ApplyAnimator();
                 Initialize();
+        }
+        public void Init()
+        {
+                cam = Camera.main;
         }
 
         private void Update()
@@ -85,6 +89,8 @@ public abstract class WeaponBase:MonoBehaviour
                 recoilIncrement = weaponData.recoilIncrement;
                 recoverRate = weaponData.recoverRate;
                 recoverDelay = weaponData.recoverDelay;
+                
+                
         }
 
         public void ApplyAnimator()

@@ -8,13 +8,17 @@ public class GunWeapon:WeaponBase
     {
         if (currentAmmo == 0 || isReloading) return;
         if (Time.time - lastFireTime < fireRate) return;
+        if (cam == null) {
+            cam = Camera.main;
+        }
         
         anim.Play("Fire");
         
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
-        Vector3 direction = (ray.direction + new Vector3(offSet.x, offSet.y, 0)).normalized;
+        Vector3 camDir = cam.transform.right * offSet.x + cam.transform.up * offSet.y;
+        Vector3 direction = (ray.direction + camDir).normalized;
         
         RaycastHit hit;
         

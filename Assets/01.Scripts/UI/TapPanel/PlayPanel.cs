@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class PlayPanel : MonoBehaviour
 {
     private ToggleGroup toggleGroup;
+    [SerializeField] private MatchData[]  matches;
     [SerializeField]private Toggle[]  toggles;
     [SerializeField]private CanvasGroup[]  panels;
     [SerializeField] private float fadeSpeed = 0.2f;
@@ -51,16 +52,27 @@ public class PlayPanel : MonoBehaviour
 
     void CreateSlot(int index)
     {
-        for(int i =0; i<= index; i++) 
+        if(index < toggles.Length-1) 
         {
-            panels[i].gameObject.SetActive(true);
-            panels[i].DOFade(1, fadeSpeed);
+            for (int i = 0; i <= index; i++) {
+                panels[i].gameObject.SetActive(true);
+                panels[i].DOFade(1, fadeSpeed);
+            }
+        }
+        else 
+        {
+            foreach (var v in panels) 
+            {
+                v.gameObject.SetActive(true);
+                v.DOFade(1, fadeSpeed);
+            }    
         }
         
+        GameManager.Instance.matchData =  matches[index];
     }
 
     public void OnClick()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1); //임시
     }
 }

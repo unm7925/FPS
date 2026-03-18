@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
@@ -18,8 +19,6 @@ public class AIController : MonoBehaviour
         private HP hp;
 
         private float sightInterval = 0.2f;
-
-        List<GameObject> players = new List<GameObject>();
         
         public GameObject currentTarget {get; private set;}
 
@@ -31,22 +30,23 @@ public class AIController : MonoBehaviour
                 enemySight = GetComponent<EnemySight>();
                 currentWeapon = GetComponentInChildren<BotGunWeapon>();
                 hp = GetComponent<HP>();
+                
         }
         private void OnEnable()
         {
                 hp.OnDie += UnRegisterPlayer;
+                
         }
         private void OnDisable()
         {
                 hp.OnDie -= UnRegisterPlayer;
         }
-        private void UnRegisterPlayer()
+        private void UnRegisterPlayer(GameObject go)
         {
-                GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamB, gameObject);
+                GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamB, go);
         }
         private void Start()
         {
-                GameManager.Instance.RegisterTeam(gameObject, GameManager.Team.TeamB);
                 StartDetectTarget();
         }
         private void Update()
@@ -75,6 +75,7 @@ public class AIController : MonoBehaviour
         }
         private IEnumerator StrafeMove(float strafeDistance, float strafeTime)
         {
+                if(!agent.isActiveAndEnabled) yield break;
                 agent.isStopped = false;
                 agent.updateRotation = false;
                 int moveX = Random.Range(0, 2) == 0 ? 1 : -1;
@@ -83,6 +84,7 @@ public class AIController : MonoBehaviour
                 agent.SetDestination(transform.position + move * strafeDistance * moveX);
                 
                 yield return new WaitForSeconds(strafeTime);
+                if(!agent.isActiveAndEnabled) yield break;
                 LoseTarget();
         }
 
@@ -94,7 +96,7 @@ public class AIController : MonoBehaviour
         {
                 while (true) 
                 {
-                        foreach (var teamA in GameManager.Instance.GetEnemeies(GameManager.Team.TeamB)) 
+                        foreach (var teamA in GameManager.Instance.GetEnemeies(GameManager.Team.TeamB).ToList()) 
                         {
                                 if (enemySight.CanSeeTarget(teamA)) 
                                 {

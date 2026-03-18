@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.RegisterTeam(gameObject, GameManager.Team.TeamA);
+        
         StandardSet();
     }
 
@@ -80,9 +80,9 @@ public class PlayerController : MonoBehaviour
     {
         hp.OnDie -=  UnregisterPlayer;
     }
-    private void UnregisterPlayer()
+    private void UnregisterPlayer(GameObject go)
     {
-        GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamA, gameObject);
+        GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamA, go);
     }
 
     void Update()

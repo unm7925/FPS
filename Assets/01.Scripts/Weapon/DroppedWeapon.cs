@@ -13,6 +13,7 @@ public class DroppedWeapon:MonoBehaviour
         if (other.CompareTag("Player")) 
         {
             WeaponSwitcher weaponSwitcher = other.GetComponentInChildren<WeaponSwitcher>();
+            weaponBase.Init();
             weaponSwitcher.PickupWeapon(weaponBase);
             DestroyComponent();
         }

@@ -19,7 +19,8 @@ public class BotGunWeapon : WeaponBase
         anim.Play("Fire",1);
 
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
-        Vector3 direction = (head.forward + new Vector3(offSet.x, offSet.y, 0)).normalized;
+        Vector3 HeadDir = head.right * offSet.x + head.up * offSet.y;
+        Vector3 direction = (head.forward + HeadDir).normalized;
 
         RaycastHit hit;
 

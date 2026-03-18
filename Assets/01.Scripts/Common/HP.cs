@@ -7,7 +7,7 @@ public class HP : MonoBehaviour,IDamageable
     public int maxHP = 100;
 
     public event Action<int> OnHPChanged;
-    public event Action OnDie;
+    public event Action<GameObject> OnDie;
 
     private void Awake()
     {
@@ -28,7 +28,7 @@ public class HP : MonoBehaviour,IDamageable
     private void Die()
     {
         // 애니메이션
-        OnDie?.Invoke();
-        gameObject.SetActive(false);
+        OnDie?.Invoke(gameObject);
+        Destroy(gameObject);
     }
 }

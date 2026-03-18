@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class GameManager:MonoBehaviour
 {
+        public static int PlayersPerTeam{get;private set;}
+        
+        public MatchData matchData;
+        
         public event Action<Team> OnGameEnd;
+        public event Action<Team> OnTeamEliminated;
         
         public static GameManager Instance;
 
@@ -27,7 +32,10 @@ public class GameManager:MonoBehaviour
                 {
                         Destroy(gameObject);
                 }
+
+                PlayersPerTeam = matchData.playersPerTeam;
         }
+
 
         public void RegisterTeam(GameObject player, Team team)
         {
@@ -52,6 +60,32 @@ public class GameManager:MonoBehaviour
                         return teamAList;
                 }
         }
+        public List<GameObject> GetTeam(Team team)
+        {
+                if (team == Team.TeamA) 
+                {
+                        return teamAList;
+                }
+                else 
+                {
+                        return teamBList;
+                }
+        }
+
+        public void ClearTeam()
+        {
+                Debug.Log(teamAList.Count + " " + teamBList.Count + " Teams");
+                foreach (GameObject team in teamAList) 
+                {
+                        Destroy(team);
+                }
+                foreach (GameObject team in teamBList) 
+                {
+                        Destroy(team);
+                }
+                teamAList.Clear();
+                teamBList.Clear();
+        }
 
         public void UnRegisterEnemies(Team team,GameObject player)
         {
@@ -65,19 +99,22 @@ public class GameManager:MonoBehaviour
                         teamBList.Remove(player);
                         
                 }
-
-                CheckWinCondition();
+                CheckRoundWindContition();
         }
-        private void CheckWinCondition()
+        private void CheckRoundWindContition()
         {
-                if (teamAList.Count == 0) 
+                if(teamAList.Count == 0) 
                 {
-                        OnGameEnd?.Invoke(Team.TeamB);                                
+                        OnTeamEliminated?.Invoke(Team.TeamB);
                 }
-                if (teamBList.Count == 0) 
+                else if (teamBList.Count == 0) 
                 {
-                        OnGameEnd?.Invoke(Team.TeamA);                         
+                        OnTeamEliminated?.Invoke(Team.TeamA);
                 }
+        }
+        public void MatchWin(Team winner)
+        {
+                OnGameEnd?.Invoke(winner);                         
         }
 }
 

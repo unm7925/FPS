@@ -3,14 +3,25 @@ using TMPro;
 using UnityEngine;
 public class HUDController:MonoBehaviour
 {
-        [SerializeField] private HP hp;
-        [SerializeField] private WeaponSwitcher weaponSwitcher;
+        private HP hp;
+        private WeaponSwitcher weaponSwitcher;
         
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private TextMeshProUGUI HPText;
 
         private WeaponBase currentWeapon;
-        private void OnEnable()
+
+        public void Init(HP _hp, WeaponSwitcher _weaponSwitcher)
+        {
+                hp = _hp;
+                weaponSwitcher = _weaponSwitcher;
+                EventConnection();
+                SwitchWeaponEvent(weaponSwitcher.currentWeapon);
+                UpdateHP(hp.maxHP);
+                if (currentWeapon == null) return;
+                UpdateAmmo(currentWeapon.currentAmmo,currentWeapon.reserveAmmo);
+        }
+        private void EventConnection()
         {
                 hp.OnHPChanged += UpdateHP;
                 weaponSwitcher.OnWeaponChanged += SwitchWeaponEvent;
@@ -37,9 +48,7 @@ public class HUDController:MonoBehaviour
         }
         private void Start()
         {
-                SwitchWeaponEvent(weaponSwitcher.currentWeapon);
-                UpdateHP(hp.maxHP);
-                UpdateAmmo(currentWeapon.currentAmmo,currentWeapon.reserveAmmo);
+                
         }
         private void UpdateAmmo(int currentAmmo, int reserveAmmo)
         {
