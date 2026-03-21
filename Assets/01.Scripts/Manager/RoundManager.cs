@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,11 +25,11 @@ public class RoundManager : MonoBehaviour
         RoundWins.Add(GameManager.Team.TeamA,0);
         RoundWins.Add(GameManager.Team.TeamB,0);
         currentRound = 0;
-        StartRound();
+        StartCoroutine(StartRound());
     }
-    private void StartRound()
+    private IEnumerator StartRound()
     {
-        
+        yield return null;
         OnRoundStart?.Invoke();
         currentRound++;
     }
@@ -43,7 +44,7 @@ public class RoundManager : MonoBehaviour
         }
         else 
         {
-            StartRound();
+            StartCoroutine(StartRound());
         }
     }
 }

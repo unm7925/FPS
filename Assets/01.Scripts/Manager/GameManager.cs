@@ -32,7 +32,8 @@ public class GameManager:MonoBehaviour
                 {
                         Destroy(gameObject);
                 }
-
+                Time.timeScale = 1;
+                if (matchData == null) return;
                 PlayersPerTeam = matchData.playersPerTeam;
         }
 

@@ -4,6 +4,7 @@ public class SpawnManager: MonoBehaviour
 {
         [SerializeField] RoundManager roundManager;
         [SerializeField] HUDController hudController;
+        [SerializeField] CrossHairController crossHairController;
         [SerializeField] private GameObject enemyPrefab;
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private Transform spawnBTeam;
@@ -42,6 +43,7 @@ public class SpawnManager: MonoBehaviour
                 GameObject Aplayer = Instantiate(playerPrefab, spawnATeam);
                 GameManager.Instance.RegisterTeam(Aplayer, GameManager.Team.TeamA);
                 hudController.Init(Aplayer.GetComponent<HP>(),Aplayer.GetComponentInChildren<WeaponSwitcher>());
+                crossHairController.Init(Aplayer.GetComponentInChildren<WeaponSwitcher>());
                 OnSpawnComplete?.Invoke();
         }
 }

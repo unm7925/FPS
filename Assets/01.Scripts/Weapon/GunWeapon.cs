@@ -2,8 +2,6 @@
 public class GunWeapon:WeaponBase
 {
     
-    
-    
     public override void Fire()
     {
         if (currentAmmo == 0 || isReloading) return;
@@ -19,21 +17,30 @@ public class GunWeapon:WeaponBase
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
         Vector3 camDir = cam.transform.right * offSet.x + cam.transform.up * offSet.y;
         Vector3 direction = (ray.direction + camDir).normalized;
-        
-        RaycastHit hit;
-        
-        if (Physics.Raycast(ray.origin , direction, out hit, range)) 
+
+        if (Physics.Raycast(ray.origin , direction, out RaycastHit hit, range)) 
         {
             IDamageable damageable = hit.collider.GetComponent<IDamageable>();
             if (damageable != null) 
-            { 
+            {
+                Debug.Log("맞음" + damage);
                 damageable.TakeDamage(damage);
             }
+            effectHandler.ShowTracer(hit.point);
+            effectHandler.ShowImpact(hit);
         }
+        else 
+        {
+            effectHandler.ShowTracer(ray.origin + direction * range);
+        }
+        
+        
+        
         currentAmmo--;
         recoilSpread += recoilIncrement;
         
         InvokeAmmoChanged();
+        
         
         lastFireTime = Time.time;
     }

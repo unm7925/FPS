@@ -56,6 +56,7 @@ public class AIController : MonoBehaviour
                 {
                         transform.LookAt(currentTarget.transform.position);
                         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+                        
                 }
         }
 
@@ -101,6 +102,7 @@ public class AIController : MonoBehaviour
                                 if (enemySight.CanSeeTarget(teamA)) 
                                 {
                                         currentTarget = teamA;
+                                        currentWeapon.SetTarget(currentTarget.transform);
                                         enemyStateMachine.ChangeState(enemyStateMachine.enemyAttackState);
                                         yield break;
                                 }

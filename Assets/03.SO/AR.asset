@@ -29,5 +29,5 @@ MonoBehaviour:
   spreadMove: 0.03
   maxSpread: 0.25
   recoilIncrement: 0.03
-  recoverDelay: 0.5
+  recoverDelay: 0.3
   recoverRate: 1

@@ -13,6 +13,7 @@ public abstract class WeaponBase:MonoBehaviour
         };
         
         [SerializeField] protected WeaponData weaponData;
+        protected BulletEffectHandler effectHandler;
         public WeaponData.WeaponType weaponType {get; protected set;}
         
         protected Animator anim;
@@ -33,7 +34,7 @@ public abstract class WeaponBase:MonoBehaviour
         protected float spreadMove;
         protected float maxSpread;
 
-        protected float finalSpread;
+        public float finalSpread{get; protected set;}
         
         protected float recoilIncrement;
         protected float recoilSpread =0;
@@ -51,6 +52,7 @@ public abstract class WeaponBase:MonoBehaviour
         
         protected virtual void Awake()
         {
+                effectHandler = GetComponent<BulletEffectHandler>();
                 Init();
                 ApplyAnimator();
                 Initialize();
@@ -58,6 +60,7 @@ public abstract class WeaponBase:MonoBehaviour
         public void Init()
         {
                 cam = Camera.main;
+                
         }
 
         private void Update()
