@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
+public enum BotDifficulty
+{
+        Easy,
+        Normal,
+        Hard
+}
 public class AIController : MonoBehaviour
 {
         private EnemyStateMachine enemyStateMachine;
         public Animator animator {get; private set;}
         public NavMeshAgent agent {get; private set;}
+        [SerializeField] private BotDifficulty botDifficulty;
 
         private BotGunWeapon currentWeapon;
         
@@ -102,7 +106,7 @@ public class AIController : MonoBehaviour
                                 if (enemySight.CanSeeTarget(teamA)) 
                                 {
                                         currentTarget = teamA;
-                                        currentWeapon.SetTarget(currentTarget.transform);
+                                        currentWeapon.SetTarget(currentTarget.transform,botDifficulty);
                                         enemyStateMachine.ChangeState(enemyStateMachine.enemyAttackState);
                                         yield break;
                                 }

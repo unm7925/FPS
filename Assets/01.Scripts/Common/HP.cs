@@ -14,20 +14,21 @@ public class HP : MonoBehaviour,IDamageable
         currentHP = maxHP;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, GameObject attacker)
     {
         currentHP -= Mathf.Abs(damage);
         if (currentHP <= 0)
         {
             currentHP = 0;
-            Die();
+            Die(attacker);
         }
         OnHPChanged?.Invoke(currentHP);
     }
 
-    private void Die()
+    private void Die(GameObject attacker)
     {
         // 애니메이션
+        StatsManager.Instance.RegisterKill(attacker,gameObject);
         OnDie?.Invoke(gameObject);
         Destroy(gameObject);
     }

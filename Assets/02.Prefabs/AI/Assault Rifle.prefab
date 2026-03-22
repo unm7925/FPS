@@ -205,6 +205,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f12441004846e59d29400a4dd7f6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotGunWeapon
+  hitboxLayer:
+    serializedVersion: 2
+    m_Bits: 65
   weaponData: {fileID: 11400000, guid: 4a26184ec2b8b394f9427339eb8d4293, type: 2}
   head: {fileID: 0}
 --- !u!114 &7699421179190618531

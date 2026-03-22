@@ -40,10 +40,10 @@ public class SpawnManager: MonoBehaviour
                         GameObject Bplayer = Instantiate(enemyPrefab, spawnBTeam);
                         GameManager.Instance.RegisterTeam(Bplayer, GameManager.Team.TeamB);
                 }
-                GameObject Aplayer = Instantiate(playerPrefab, spawnATeam);
-                GameManager.Instance.RegisterTeam(Aplayer, GameManager.Team.TeamA);
-                hudController.Init(Aplayer.GetComponent<HP>(),Aplayer.GetComponentInChildren<WeaponSwitcher>());
-                crossHairController.Init(Aplayer.GetComponentInChildren<WeaponSwitcher>());
+                GameObject aPlayer = Instantiate(playerPrefab, spawnATeam);
+                GameManager.Instance.RegisterTeam(aPlayer, GameManager.Team.TeamA);
+                hudController.Init(aPlayer.GetComponent<HP>(),aPlayer.GetComponentInChildren<WeaponSwitcher>());
+                crossHairController.Init(aPlayer.GetComponentInChildren<WeaponSwitcher>());
                 OnSpawnComplete?.Invoke();
         }
 }

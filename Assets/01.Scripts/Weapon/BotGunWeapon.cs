@@ -9,6 +9,7 @@ public class BotGunWeapon : WeaponBase
     private Transform target;
     private Vector3 aimPoint;
     private float aimHeight = 1.5f;
+    private float targetHeight;
     
     protected override void Awake()
     {
@@ -17,8 +18,21 @@ public class BotGunWeapon : WeaponBase
         Initialize();
     }
 
-    public void SetTarget(Transform _target)
+    public void SetTarget(Transform _target, BotDifficulty _difficulty)
     {
+        switch (_difficulty) 
+        {
+            case BotDifficulty.Easy:
+                targetHeight = Random.Range(0f, 6f);
+                break;
+            case BotDifficulty.Normal:
+                targetHeight = Random.Range(3f, 6.6f);
+                break;
+            case BotDifficulty.Hard:
+                targetHeight = Random.Range(5f, 6.6f);
+                break;
+        }
+        
         target = _target;
     }
 
@@ -33,18 +47,26 @@ public class BotGunWeapon : WeaponBase
         
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
         Vector3 spreadDir = head.right * offSet.x + head.up * offSet.y;
-        Vector3 baseDir = (target.position- aimPoint).normalized;
+        Vector3 baseDir = (target.position + Vector3.up * targetHeight - aimPoint).normalized;
         Vector3 direction = (baseDir + spreadDir).normalized; 
         
-        if (Physics.Raycast(aimPoint, direction, out RaycastHit hit, range,~LayerMask.GetMask("Enemy")))
+        if (Physics.Raycast(aimPoint, direction, out RaycastHit hit, range, hitboxLayer))
         {
-            Debug.Log(hit.transform.name);
-            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-            if (damageable != null) 
+            Hitbox hitbox = hit.collider.GetComponent<Hitbox>();
+            HP targetHP = hit.collider.GetComponentInParent<HP>();
+            if (hitbox != null) 
             {
-                Debug.Log(damage);
-                damageable.TakeDamage(damage);
+                hitbox.ApplyDamage(damage,targetHP);
             }
+            else 
+            {
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null) 
+                {
+                    damageable.TakeDamage(damage,transform.root.gameObject);
+                }                
+            }
+            
             effectHandler.ShowTracer(hit.point);
             effectHandler.ShowImpact(hit);
         }

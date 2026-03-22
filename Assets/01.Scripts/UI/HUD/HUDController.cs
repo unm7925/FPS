@@ -14,6 +14,7 @@ public class HUDController:MonoBehaviour
         public void Init(HP _hp, WeaponSwitcher _weaponSwitcher)
         {
                 hp = _hp;
+                
                 weaponSwitcher = _weaponSwitcher;
                 EventConnection();
                 SwitchWeaponEvent(weaponSwitcher.currentWeapon);
@@ -25,7 +26,6 @@ public class HUDController:MonoBehaviour
         {
                 hp.OnHPChanged += UpdateHP;
                 weaponSwitcher.OnWeaponChanged += SwitchWeaponEvent;
-                
         }
         
         private void OnDisable()
