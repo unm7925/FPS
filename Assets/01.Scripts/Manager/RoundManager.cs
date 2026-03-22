@@ -9,6 +9,7 @@ public class RoundManager : MonoBehaviour
     [SerializeField]private int roundsToWin = 10;
 
     public event Action OnRoundStart;
+    public event Action OnRoundEnd;
     
     Dictionary<GameManager.Team,int> RoundWins = new Dictionary<GameManager.Team,int>();
 
@@ -37,7 +38,7 @@ public class RoundManager : MonoBehaviour
     private void EndRound(GameManager.Team winner)
     {
         RoundWins[winner]++;
-        GameManager.Instance.ClearTeam();
+        OnRoundEnd?.Invoke();
         if (roundsToWin <= RoundWins[winner]) 
         {
             GameManager.Instance.MatchWin(winner);

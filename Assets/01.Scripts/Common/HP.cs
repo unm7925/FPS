@@ -9,7 +9,7 @@ public class HP : MonoBehaviour,IDamageable
     public event Action<int> OnHPChanged;
     public event Action<GameObject> OnDie;
 
-    private void Awake()
+    public void Init()
     {
         currentHP = maxHP;
     }
@@ -30,6 +30,6 @@ public class HP : MonoBehaviour,IDamageable
         // 애니메이션
         StatsManager.Instance.RegisterKill(attacker,gameObject);
         OnDie?.Invoke(gameObject);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

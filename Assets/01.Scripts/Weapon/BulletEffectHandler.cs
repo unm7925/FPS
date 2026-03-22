@@ -17,6 +17,7 @@ public class BulletEffectHandler:MonoBehaviour
 
     public void ShowTracer( Vector3 to)
     {
+        if (!gameObject.activeInHierarchy) return;
         lineRenderer.material.color = new Color
             (lineRenderer.material.color.r, lineRenderer.material.color.g, lineRenderer.material.color.b, 1f);
         lineRenderer.enabled = true;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 public class SpawnManager: MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class SpawnManager: MonoBehaviour
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private Transform spawnBTeam;
         [SerializeField] private Transform spawnATeam;
+        
+        ObjectPool<PlayerController> playerPool = new ObjectPool<PlayerController>();
+        ObjectPool<AIController> aiPool = new ObjectPool<AIController>();
+        
+        List<AIController> teamBList = new List<AIController>();
+        List<PlayerController> teamAList = new List<PlayerController>();
 
         public event Action OnSpawnComplete;
         
@@ -16,9 +23,19 @@ public class SpawnManager: MonoBehaviour
         // 아직 멀티 구현안해서 적만 소환
         private int playerCount;
 
+        private bool IsSet;
+
         private void Awake()
         {
                 playerCount = GameManager.Instance.matchData.playersPerTeam;
+                
+                AIController aiController = enemyPrefab.GetComponent<AIController>();
+                aiPool.Init(aiController,playerCount,spawnBTeam);
+                
+                PlayerController playerController = playerPrefab.GetComponent<PlayerController>();
+                playerPool.Init(playerController,playerCount,spawnATeam);
+                
+                
         }
         private void Start()
         {
@@ -28,22 +45,54 @@ public class SpawnManager: MonoBehaviour
         private void OnEnable()
         {
                 roundManager.OnRoundStart += Spawn;
+                roundManager.OnRoundEnd += Despawn;
         }
         private void OnDisable()
         {
                 roundManager.OnRoundStart -= Spawn;
+                roundManager.OnRoundEnd -= Despawn;
         }
         private void Spawn()
         {
                 for (int i = 0; i < playerCount; i++) 
                 {
-                        GameObject Bplayer = Instantiate(enemyPrefab, spawnBTeam);
-                        GameManager.Instance.RegisterTeam(Bplayer, GameManager.Team.TeamB);
+                        AIController go = aiPool.Get();
+                        go.transform.position = spawnBTeam.position;
+                        HP hp = go.GetComponent<HP>();
+                        hp.Init();
+                        GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
+                        teamBList.Add(go);
                 }
-                GameObject aPlayer = Instantiate(playerPrefab, spawnATeam);
-                GameManager.Instance.RegisterTeam(aPlayer, GameManager.Team.TeamA);
-                hudController.Init(aPlayer.GetComponent<HP>(),aPlayer.GetComponentInChildren<WeaponSwitcher>());
-                crossHairController.Init(aPlayer.GetComponentInChildren<WeaponSwitcher>());
+                for (int i = 0; i < 1; i++) 
+                {
+                        PlayerController player = playerPool.Get();
+                        player.transform.position = spawnATeam.position;
+                        HP hp = player.GetComponent<HP>();
+                        hp.Init();
+                        GameManager.Instance.RegisterTeam(player.gameObject, GameManager.Team.TeamA);
+                        teamAList.Add(player);
+                        if (IsSet == false) 
+                        {
+                                hudController.Init(player.GetComponent<HP>(),player.GetComponentInChildren<WeaponSwitcher>());
+                                crossHairController.Init(player.GetComponentInChildren<WeaponSwitcher>());
+                                IsSet = true;
+                        }
+                }
+                
                 OnSpawnComplete?.Invoke();
+        }
+
+        private void Despawn()
+        {
+                foreach (PlayerController player in teamAList) 
+                {
+                        playerPool.Return(player);        
+                }
+                foreach (AIController ai in teamBList)
+                {
+                        aiPool.Return(ai);
+                }
+                teamAList.Clear();
+                teamBList.Clear();
         }
 }

@@ -14,21 +14,21 @@ public class Hitbox:MonoBehaviour
     private float damageBodyMul = 1f;
     private float damageLimbMul = 0.75f;
 
-    public void ApplyDamage(int damage,HP targetHP)
+    public void ApplyDamage(int damage,HP targetHP, GameObject attacker)
     {
         
         switch(hitboxType) 
         {
             case HitboxType.Head :
-                targetHP.TakeDamage((int)(damage * damageHeadMul),gameObject) ;
+                targetHP.TakeDamage((int)(damage * damageHeadMul),attacker) ;
                 Debug.Log(damage*damageHeadMul);
                 break;
             case HitboxType.Body :
-                targetHP.TakeDamage((int)(damage * damageBodyMul),gameObject) ;
+                targetHP.TakeDamage((int)(damage * damageBodyMul),attacker) ;
                 Debug.Log(damage*damageBodyMul);
                 break;
             case HitboxType.Limb :
-                targetHP.TakeDamage((int)(damage * damageLimbMul),gameObject) ;
+                targetHP.TakeDamage((int)(damage * damageLimbMul),attacker) ;
                 Debug.Log(damage*damageLimbMul);
                 break;
         }

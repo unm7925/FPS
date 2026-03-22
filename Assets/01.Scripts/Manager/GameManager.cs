@@ -72,21 +72,7 @@ public class GameManager:MonoBehaviour
                         return teamBList;
                 }
         }
-
-        public void ClearTeam()
-        {
-                Debug.Log(teamAList.Count + " " + teamBList.Count + " Teams");
-                foreach (GameObject team in teamAList) 
-                {
-                        Destroy(team);
-                }
-                foreach (GameObject team in teamBList) 
-                {
-                        Destroy(team);
-                }
-                teamAList.Clear();
-                teamBList.Clear();
-        }
+        
 
         public void UnRegisterEnemies(Team team,GameObject player)
         {

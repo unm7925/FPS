@@ -25,7 +25,7 @@ public class GunWeapon:WeaponBase
                 HP targetHp = hit.collider.GetComponentInParent<HP>();
                 if(hitbox != null) 
                 {
-                    hitbox.ApplyDamage(damage,targetHp);
+                    hitbox.ApplyDamage(damage,targetHp,transform.root.gameObject);
                 }
                 else 
                 {

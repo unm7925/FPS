@@ -56,7 +56,7 @@ public class BotGunWeapon : WeaponBase
             HP targetHP = hit.collider.GetComponentInParent<HP>();
             if (hitbox != null) 
             {
-                hitbox.ApplyDamage(damage,targetHP);
+                hitbox.ApplyDamage(damage,targetHP,transform.root.gameObject);
             }
             else 
             {
