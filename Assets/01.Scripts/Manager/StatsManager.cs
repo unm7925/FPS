@@ -33,9 +33,6 @@ public class StatsManager : MonoBehaviour
         
         playerStats[killer].kills++;
         playerStats[victim].deaths++;
-        
-        Debug.Log(playerStats[killer].kills + " " + playerStats[killer].deaths);
-        Debug.Log(playerStats[victim].kills + " " + playerStats[victim].deaths);
     }
     public void RegisterPlayer(GameObject _player)
     {

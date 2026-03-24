@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.DualShock;
 using Random = UnityEngine.Random;
@@ -6,6 +7,7 @@ public class BotGunWeapon : WeaponBase
 {
     
     [SerializeField]private Transform head;
+    private BotDifficulty type;
     private Transform target;
     private Vector3 aimPoint;
     private float aimHeight = 1.5f;
@@ -26,13 +28,14 @@ public class BotGunWeapon : WeaponBase
                 targetHeight = Random.Range(0f, 6f);
                 break;
             case BotDifficulty.Normal:
-                targetHeight = Random.Range(3f, 6.6f);
+                targetHeight = Random.Range(2f, 4f);
                 break;
             case BotDifficulty.Hard:
-                targetHeight = Random.Range(5f, 6.6f);
+                targetHeight = Random.Range(3.5f, 4f);
                 break;
         }
-        
+        if (target == _target && type == _difficulty) return;
+        type = _difficulty;
         target = _target;
     }
 
@@ -44,6 +47,8 @@ public class BotGunWeapon : WeaponBase
         anim.Play("Fire",1);
         
         aimPoint = head.position + Vector3.up * aimHeight;
+
+        SetTarget(target, type);
         
         Vector2 offSet = Random.insideUnitCircle * finalSpread;
         Vector3 spreadDir = head.right * offSet.x + head.up * offSet.y;

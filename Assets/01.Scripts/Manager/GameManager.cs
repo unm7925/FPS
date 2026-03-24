@@ -99,6 +99,11 @@ public class GameManager:MonoBehaviour
                         OnTeamEliminated?.Invoke(Team.TeamA);
                 }
         }
+        public void ClearTeams()
+        {
+                teamAList.Clear();
+                teamBList.Clear();
+        }
         public void MatchWin(Team winner,int roundWin, int roundLose)
         {
                 OnGameEnd?.Invoke(winner,roundWin,roundLose);                         

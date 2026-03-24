@@ -6,14 +6,23 @@ using Newtonsoft.Json;
 
 public class MatchRecordManager:MonoBehaviour
 {
+        public static MatchRecordManager Instance;
         List<MatchRecord> matchHistory;
         private string savePath;
         
         private void Awake()
         {
-                DontDestroyOnLoad(gameObject);
-                savePath = Application.persistentDataPath + "/records.json";
-                LoadFromJson();
+                if(Instance == null) 
+                {
+                        Instance = this;
+                        DontDestroyOnLoad(gameObject);
+                        savePath = Application.persistentDataPath + "/records.json";
+                        LoadFromJson();
+                }
+                else 
+                {
+                        Destroy(gameObject);
+                }
         }
         private void OnEnable()
         {
@@ -29,6 +38,7 @@ public class MatchRecordManager:MonoBehaviour
                 MatchRecord record = new MatchRecord();
                 record.gameMode = GameManager.Instance.matchData.matchType.ToString();
                 record.isWin = winnerTeam == GameManager.Team.TeamA;
+                
                 record.kills = StatsManager.Instance.GetKill(StatsManager.Instance.player);
                 record.deaths = StatsManager.Instance.GetDeath(StatsManager.Instance.player);
                 record.roundScore = roundWin;
@@ -49,6 +59,12 @@ public class MatchRecordManager:MonoBehaviour
         {
                 matchHistory = File.Exists(savePath) ? 
                         JsonConvert.DeserializeObject<List<MatchRecord>>(File.ReadAllText(savePath)) : new List<MatchRecord>();
+        }
+        public List<MatchRecord> GetHistory()
+        {
+                var list = new List<MatchRecord>(matchHistory);
+                list.Reverse();
+                return list;
         }
 }
 

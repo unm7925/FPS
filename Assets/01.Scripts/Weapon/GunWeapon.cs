@@ -35,7 +35,6 @@ public class GunWeapon:WeaponBase
                         damageable.TakeDamage(damage,transform.root.gameObject);
                     }
                 }
-            
                 effectHandler.ShowTracer(hit.point);
                 effectHandler.ShowImpact(hit);
             }

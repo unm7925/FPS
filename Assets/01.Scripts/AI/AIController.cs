@@ -39,7 +39,7 @@ public class AIController : MonoBehaviour
         private void OnEnable()
         {
                 hp.OnDie += UnRegisterPlayer;
-                
+                StartDetectTarget();
         }
         private void OnDisable()
         {
@@ -51,7 +51,7 @@ public class AIController : MonoBehaviour
         }
         private void Start()
         {
-                StartDetectTarget();
+               
         }
         private void Update()
         {
@@ -74,7 +74,7 @@ public class AIController : MonoBehaviour
         }
         public void StartStrafeMove(float strafeDistance, float strafeTime)
         {
-                
+                if (!gameObject.activeInHierarchy) return;
                 if (currentTarget == null) return;
                 StartCoroutine(StrafeMove(strafeDistance,strafeTime));
         }

@@ -44,13 +44,13 @@ public class SpawnManager: MonoBehaviour
 
         private void OnEnable()
         {
-                roundManager.OnRoundStart += Spawn;
                 roundManager.OnRoundEnd += Despawn;
+                roundManager.OnRoundStart += Spawn;
         }
         private void OnDisable()
         {
-                roundManager.OnRoundStart -= Spawn;
                 roundManager.OnRoundEnd -= Despawn;
+                roundManager.OnRoundStart -= Spawn;
         }
         private void Spawn()
         {
@@ -61,6 +61,7 @@ public class SpawnManager: MonoBehaviour
                         HP hp = go.GetComponent<HP>();
                         hp.Init();
                         GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
+                        go.gameObject.transform.SetParent(null);
                         teamBList.Add(go);
                 }
                 for (int i = 0; i < 1; i++) 
@@ -70,6 +71,7 @@ public class SpawnManager: MonoBehaviour
                         HP hp = player.GetComponent<HP>();
                         hp.Init();
                         GameManager.Instance.RegisterTeam(player.gameObject, GameManager.Team.TeamA);
+                        player.gameObject.transform.SetParent(null);
                         teamAList.Add(player);
                         if (IsSet == false) 
                         {
@@ -95,5 +97,6 @@ public class SpawnManager: MonoBehaviour
                 }
                 teamAList.Clear();
                 teamBList.Clear();
+                GameManager.Instance.ClearTeams();
         }
 }
