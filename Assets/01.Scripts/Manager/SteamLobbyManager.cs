@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using Mirror;
 using Steamworks;
 using TMPro;
@@ -10,13 +11,14 @@ public class SteamLobbyManager:MonoBehaviour
         CallResult<LobbyCreated_t> createLobbyResult;
         CallResult<LobbyEnter_t> enterLobbyResult;
         Callback<LobbyChatUpdate_t> chatUpdateResult;
+        Callback<LobbyMatchList_t> randomLobbyResult;
         
         [SerializeField] private GameObject RoomPrefab;
         [SerializeField] private TextMeshProUGUI roomID_Txt;
         [SerializeField] private LobbyPlayerSlot[] playerSlots;
         [SerializeField] private TMP_InputField enterRoomID_Txt;
         
-        
+        public LobbyPlayerSlot[] PlayerSlots => playerSlots;
         private ulong roomID;
 
         private void Awake()
@@ -34,6 +36,23 @@ public class SteamLobbyManager:MonoBehaviour
                 createLobbyResult = CallResult<LobbyCreated_t>.Create(OnLobbyCreated);
                 enterLobbyResult = CallResult<LobbyEnter_t>.Create(OnLobbyEntered);
                 chatUpdateResult = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
+                randomLobbyResult = Callback<LobbyMatchList_t>.Create(RandomMatch);
+        }
+        private void RandomMatch(LobbyMatchList_t param)
+        {
+                if (param.m_nLobbiesMatching>0) 
+                {
+                        CSteamID id = SteamMatchmaking.GetLobbyByIndex(0);
+                        EnterRoom((ulong) id);
+                }
+                else 
+                {
+                        CreatedRoom();
+                }
+        }
+        public void StartRandomMatch()
+        {
+                SteamMatchmaking.RequestLobbyList();
         }
         private void OnLobbyChatUpdate(LobbyChatUpdate_t result)
         {
@@ -69,14 +88,20 @@ public class SteamLobbyManager:MonoBehaviour
                         RoomPrefab.SetActive(false);
                         return;
                 }
-                playerSlots[0].Init(SteamUser.GetSteamID());
                 RoomPrefab.SetActive(true);
                 roomID = result.m_ulSteamIDLobby;
                 roomID_Txt.text = roomID.ToString();
                 NetworkManager.singleton.StartHost();
+                StartCoroutine(InitAfterHost());
+        }
+        private IEnumerator InitAfterHost()
+        {
+                yield return null;
+                playerSlots[0].Init(SteamUser.GetSteamID());
         }
         private void EnterRoom(ulong roomID)
         {
+                
                 SteamAPICall_t handle = SteamMatchmaking.JoinLobby(new CSteamID(roomID));
                 enterLobbyResult.Set(handle);
         }
@@ -91,19 +116,25 @@ public class SteamLobbyManager:MonoBehaviour
                 RoomPrefab.SetActive(true);
                 roomID_Txt.text = result.m_ulSteamIDLobby.ToString();
                 CSteamID id = SteamMatchmaking.GetLobbyOwner(new CSteamID(roomID));
+                playerSlots[0].Init(id);
+                playerSlots[1].Init(SteamUser.GetSteamID());
                 if (SteamUser.GetSteamID() == id) return;
                 NetworkManager.singleton.networkAddress = id.ToString();
-                NetworkManager.singleton.StartClient();
+                if (!NetworkManager.singleton.isNetworkActive)
+                        NetworkManager.singleton.StartClient();
         }
 
         public void LeaveRoom()
         {
-                SteamMatchmaking.LeaveLobby(new CSteamID(roomID));
-                RoomPrefab.SetActive(false);
                 foreach (var v in playerSlots) 
                 {
+                        v.StopAllCoroutines();
                         v.SlotClear();
                 }
+                if (NetworkManager.singleton.isNetworkActive)
+                        NetworkLobby.Instance?.CmdResetReady();
+                RoomPrefab.SetActive(false);
+                SteamMatchmaking.LeaveLobby(new CSteamID(roomID));
         }
 
         public void JoinRoom()

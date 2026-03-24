@@ -1,7 +1,11 @@
-using System;
+
+using System.Collections;
+using System.Linq;
+using Mirror;
 using Steamworks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbyPlayerSlot : MonoBehaviour
@@ -9,12 +13,15 @@ public class LobbyPlayerSlot : MonoBehaviour
     [SerializeField] private RawImage avatar;
     [SerializeField] private TextMeshProUGUI nameTxt;
     [SerializeField] private TextMeshProUGUI stateTxt;
+    [SerializeField] private int slotIndex;
+    
+    
     private Callback<AvatarImageLoaded_t> avatarLoaded;
     
     public CSteamID userID{get; private set;}
     private string ready = "Ready";
     private string waiting = "Waiting";
-
+    
     private bool isReady;
 
     public void Init(CSteamID _userID)
@@ -41,25 +48,23 @@ public class LobbyPlayerSlot : MonoBehaviour
         }
     }
 
+    
     public void ReadyClicked()
     {
-        if (userID != SteamUser.GetSteamID()) return;
-        if (!isReady) 
-        {
-            stateTxt.text = ready;
-            isReady = true;
-        }
-        else 
-        {
-            stateTxt.text = waiting;
-            isReady = false;
-        }
+        if (userID != SteamUser.GetSteamID()) return; 
+        NetworkLobby.Instance.CmdSetReady(slotIndex,!isReady);
     }
+    
     public void SlotClear()
     {
         avatar.texture = null;
         nameTxt.text = "";
         stateTxt.text = "";
-        isReady = false;
+    }
+
+    public void SetReadyUI(bool value)
+    {
+        isReady = value;
+        stateTxt.text = value ? ready : waiting;
     }
 }
