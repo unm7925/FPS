@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Text;
 using UnityEngine;
 using Newtonsoft.Json;
+using Steamworks;
 
 
 public class MatchRecordManager:MonoBehaviour
 {
         public static MatchRecordManager Instance;
-        List<MatchRecord> matchHistory;
-        private string savePath;
+        
+        
+        SaveData data = new SaveData();
+        List<MatchRecord> matchHistory =  new List<MatchRecord>();
+        private int winP = 5;
+        private int loseP = -3;
+        private string savePath ="records.json";
         
         private void Awake()
         {
@@ -16,7 +22,6 @@ public class MatchRecordManager:MonoBehaviour
                 {
                         Instance = this;
                         DontDestroyOnLoad(gameObject);
-                        savePath = Application.persistentDataPath + "/records.json";
                         LoadFromJson();
                 }
                 else 
@@ -45,26 +50,52 @@ public class MatchRecordManager:MonoBehaviour
                 record.enemyRoundScore = roundLose;
                 
                 matchHistory.Add(record);
+                
+                data.matchRecords = matchHistory;
+                if(record.isWin) 
+                {
+                        data.currentRankScore += winP;
+                }
+                else 
+                {
+                        data.currentRankScore += loseP;
+                }
+                data.currentRankScore = Mathf.Max(0, data.currentRankScore);
                 SaveToJson();
                 StatsManager.Instance.Clear();
         }
         private void SaveToJson()
         {
-                
-                var json = JsonConvert.SerializeObject(matchHistory, Formatting.Indented);
-                File.WriteAllText(savePath, json);
-                
+                var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                byte[] info = new UTF8Encoding(true).GetBytes(json);
+                SteamRemoteStorage.FileWrite(savePath, info, info.Length);
         }
         private void LoadFromJson()
         {
-                matchHistory = File.Exists(savePath) ? 
-                        JsonConvert.DeserializeObject<List<MatchRecord>>(File.ReadAllText(savePath)) : new List<MatchRecord>();
+                if(SteamRemoteStorage.FileExists(savePath)) 
+                {
+                        int size = SteamRemoteStorage.GetFileSize(savePath);
+                        byte[] bytes = new byte[size];
+                        SteamRemoteStorage.FileRead(savePath,bytes,bytes.Length);
+                        var json = Encoding.UTF8.GetString(bytes);
+                        data = JsonConvert.DeserializeObject<SaveData>(json);
+                        matchHistory = data.matchRecords;
+                }
+                else 
+                {
+                        data = new SaveData();
+                        matchHistory = new List<MatchRecord>();
+                }
         }
         public List<MatchRecord> GetHistory()
         {
                 var list = new List<MatchRecord>(matchHistory);
                 list.Reverse();
                 return list;
+        }
+        public int GetRankScore()
+        {
+                return data.currentRankScore;
         }
 }
 
