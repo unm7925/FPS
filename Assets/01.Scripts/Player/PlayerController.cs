@@ -1,4 +1,5 @@
 using System;
+using Mirror;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -62,13 +63,14 @@ public class PlayerController : MonoBehaviour
         hp = GetComponent<HP>();
         
         
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void Start()
     {
-        
+        gameObject.SetActive(false);
+        return; // 버그막기용
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         StandardSet();
     }
 

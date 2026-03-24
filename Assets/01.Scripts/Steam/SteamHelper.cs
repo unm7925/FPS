@@ -6,7 +6,7 @@ public static class SteamHelper
         public static Texture2D GetAvatar(CSteamID steamID)
         {
                 int handle = SteamFriends.GetMediumFriendAvatar(steamID);
-                if (handle == -1) return null;
+                if (handle == -1|| handle == 0) return null;
                 
                 SteamUtils.GetImageSize(handle, out uint w, out uint h);
 

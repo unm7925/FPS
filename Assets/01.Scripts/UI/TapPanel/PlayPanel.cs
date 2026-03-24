@@ -71,8 +71,4 @@ public class PlayPanel : MonoBehaviour
         GameManager.Instance.matchData =  matches[index];
     }
 
-    public void OnClick()
-    {
-        SceneManager.LoadScene(1); //임시
-    }
 }
