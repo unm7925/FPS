@@ -31,7 +31,7 @@ public class GameResultUI:MonoBehaviour
         {
                 GameManager.Instance.OnGameEnd -= GameResultPanel;
         }
-        private void GameResultPanel(GameManager.Team team)
+        private void GameResultPanel(GameManager.Team team,int roundWin, int roundLose)
         {
                 Time.timeScale = 0.3f;
                 resultPanel.SetActive(true);

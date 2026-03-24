@@ -75,6 +75,7 @@ public class SpawnManager: MonoBehaviour
                         {
                                 hudController.Init(player.GetComponent<HP>(),player.GetComponentInChildren<WeaponSwitcher>());
                                 crossHairController.Init(player.GetComponentInChildren<WeaponSwitcher>());
+                                StatsManager.Instance.RegisterPlayer(player.gameObject);
                                 IsSet = true;
                         }
                 }

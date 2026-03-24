@@ -51,7 +51,7 @@ public class TeamStatusHUD : MonoBehaviour
             teamASlots[index].gameObject.SetActive(false);
         }
         else {
-            teamASlots[index].gameObject.SetActive(false);
+            teamBSlots[index].gameObject.SetActive(false);
         }
         Debug.Log(index);
     }

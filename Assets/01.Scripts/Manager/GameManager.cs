@@ -7,7 +7,7 @@ public class GameManager:MonoBehaviour
         
         public MatchData matchData;
         
-        public event Action<Team> OnGameEnd;
+        public event Action<Team,int,int> OnGameEnd;
         public event Action<Team> OnTeamEliminated;
         
         public static GameManager Instance;
@@ -99,9 +99,9 @@ public class GameManager:MonoBehaviour
                         OnTeamEliminated?.Invoke(Team.TeamA);
                 }
         }
-        public void MatchWin(Team winner)
+        public void MatchWin(Team winner,int roundWin, int roundLose)
         {
-                OnGameEnd?.Invoke(winner);                         
+                OnGameEnd?.Invoke(winner,roundWin,roundLose);                         
         }
 }
 

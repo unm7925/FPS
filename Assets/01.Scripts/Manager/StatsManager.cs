@@ -6,6 +6,8 @@ using UnityEngine;
 public class StatsManager : MonoBehaviour
 {
     public static StatsManager Instance;
+
+    public GameObject player;
     
     Dictionary<GameObject,PlayerStat> playerStats = new Dictionary<GameObject,PlayerStat>();
 
@@ -34,5 +36,22 @@ public class StatsManager : MonoBehaviour
         
         Debug.Log(playerStats[killer].kills + " " + playerStats[killer].deaths);
         Debug.Log(playerStats[victim].kills + " " + playerStats[victim].deaths);
+    }
+    public void RegisterPlayer(GameObject _player)
+    {
+        player = _player;
+    }
+
+    public int GetKill(GameObject killer)
+    {
+        return !playerStats.ContainsKey(killer) ? 0 : playerStats[killer].kills;
+    }
+    public int GetDeath(GameObject killer)
+    {
+        return !playerStats.ContainsKey(killer) ? 0 : playerStats[killer].deaths;
+    }
+    public void Clear()
+    {
+        playerStats.Clear();
     }
 }
