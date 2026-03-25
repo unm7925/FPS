@@ -1,6 +1,7 @@
 ﻿using System;
+using Mirror;
 using UnityEngine;
-public class PlayerStateMachine:MonoBehaviour
+public class PlayerStateMachine:NetworkBehaviour
 {
     private PlayerInputHandler actions;
     private PlayerController controller;
@@ -37,6 +38,7 @@ public class PlayerStateMachine:MonoBehaviour
     
     private void Update()
     {
+        if (!isLocalPlayer) return;
         CurrentState?.Update();
         ChangeMovementState();
     }

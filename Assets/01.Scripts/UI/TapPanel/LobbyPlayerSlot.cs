@@ -45,7 +45,7 @@ public class LobbyPlayerSlot : MonoBehaviour
     public void ReadyClicked()
     {
         if (userID != SteamUser.GetSteamID()) return;
-        SteamMatchmaking.SetLobbyMemberData(new CSteamID(SteamLobbyManager.Instance.roomID), ready, isReady ? "0" : "1");
+        SteamMatchmaking.SetLobbyMemberData(new CSteamID(SessionData.RoomID), ready, isReady ? "0" : "1");
         isReady = !isReady;
     }
     

@@ -1,7 +1,8 @@
 ﻿using System;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class PlayerInputHandler:MonoBehaviour
+public class PlayerInputHandler:NetworkBehaviour
 {
     [Header("Input")]
     public Vector2 Move{get; private set;}
@@ -16,11 +17,19 @@ public class PlayerInputHandler:MonoBehaviour
     
     public event Action<int> OnSlotChanged;
     public event Action OnWeaponDrop;
-    
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        
+        actions.Player.Enable();
+        
+    }
+
     private void Awake()
     {
         actions = new InputSystem_Actions();
-        actions.Player.Enable();
+        
         RegisterInputActions();
     }
    

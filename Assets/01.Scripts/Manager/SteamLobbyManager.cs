@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mirror;
 using Steamworks;
@@ -6,8 +7,6 @@ using TMPro;
 using UnityEngine;
 public class SteamLobbyManager:MonoBehaviour
 {
-        public static SteamLobbyManager Instance;
-        
         CallResult<LobbyCreated_t> createLobbyResult;
         CallResult<LobbyEnter_t> enterLobbyResult;
         Callback<LobbyChatUpdate_t> chatUpdateResult;
@@ -20,21 +19,9 @@ public class SteamLobbyManager:MonoBehaviour
         [SerializeField] private TMP_InputField enterRoomID_Txt;
         
         Dictionary<CSteamID,LobbyPlayerSlot> slots = new Dictionary<CSteamID, LobbyPlayerSlot>();
-        
-        public ulong roomID{get; private set;}
 
         private void Awake()
         {
-                if (Instance == null) 
-                {
-                        Instance = this;
-                        DontDestroyOnLoad(gameObject);
-                }
-                else 
-                {
-                        Destroy(gameObject);
-                }
-
                 createLobbyResult = CallResult<LobbyCreated_t>.Create(OnLobbyCreated);
                 enterLobbyResult = CallResult<LobbyEnter_t>.Create(OnLobbyEntered);
                 chatUpdateResult = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
@@ -130,15 +117,15 @@ public class SteamLobbyManager:MonoBehaviour
                         return;
                 }
                 RoomPrefab.SetActive(true);
-                roomID = result.m_ulSteamIDLobby;
-                roomID_Txt.text = roomID.ToString();
+                SessionData.RoomID = result.m_ulSteamIDLobby;
+                roomID_Txt.text = SessionData.RoomID.ToString();
                 playerSlots[0].Init(SteamUser.GetSteamID());
                 slots[SteamUser.GetSteamID()] =  playerSlots[0];
         }
-        private void EnterRoom(ulong roomID)
+        private void EnterRoom(ulong _roomID)
         {
                 
-                SteamAPICall_t handle = SteamMatchmaking.JoinLobby(new CSteamID(roomID));
+                SteamAPICall_t handle = SteamMatchmaking.JoinLobby(new CSteamID(_roomID));
                 enterLobbyResult.Set(handle);
         }
         
@@ -148,10 +135,10 @@ public class SteamLobbyManager:MonoBehaviour
                 {
                         return;
                 }
-                roomID = result.m_ulSteamIDLobby;
+                SessionData.RoomID = result.m_ulSteamIDLobby;
                 RoomPrefab.SetActive(true);
                 roomID_Txt.text = result.m_ulSteamIDLobby.ToString();
-                CSteamID id = SteamMatchmaking.GetLobbyOwner(new CSteamID(roomID));
+                CSteamID id = SteamMatchmaking.GetLobbyOwner(new CSteamID(SessionData.RoomID));
                 if (id == SteamUser.GetSteamID()) return;
                 playerSlots[0].Init(id);
                 playerSlots[1].Init(SteamUser.GetSteamID());
@@ -169,7 +156,7 @@ public class SteamLobbyManager:MonoBehaviour
                 }
                 if (NetworkManager.singleton.isNetworkActive) 
                 {
-                        if (SteamUser.GetSteamID() == SteamMatchmaking.GetLobbyOwner(new CSteamID(roomID))) 
+                        if (SteamUser.GetSteamID() == SteamMatchmaking.GetLobbyOwner(new CSteamID(SessionData.RoomID))) 
                         {
                                 NetworkManager.singleton.StopHost();
                         }
@@ -180,7 +167,7 @@ public class SteamLobbyManager:MonoBehaviour
                 }
 
                 RoomPrefab.SetActive(false);
-                SteamMatchmaking.LeaveLobby(new CSteamID(roomID));
+                SteamMatchmaking.LeaveLobby(new CSteamID(SessionData.RoomID));
         }
 
         public void JoinRoom()
@@ -189,5 +176,14 @@ public class SteamLobbyManager:MonoBehaviour
                 {
                         EnterRoom(id);
                 }
+        }
+
+        private void OnDestroy()
+        {
+                createLobbyResult.Dispose();
+                enterLobbyResult.Dispose();
+                chatUpdateResult.Dispose();
+                randomLobbyResult.Dispose();
+                lobbyDataUpdateResult.Dispose();
         }
 }

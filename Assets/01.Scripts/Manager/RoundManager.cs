@@ -26,6 +26,9 @@ public class RoundManager : MonoBehaviour
         RoundWins.Add(GameManager.Team.TeamA,0);
         RoundWins.Add(GameManager.Team.TeamB,0);
         currentRound = 0;
+    }
+    public void StartGame()
+    {
         StartCoroutine(StartRound());
     }
     private IEnumerator StartRound()

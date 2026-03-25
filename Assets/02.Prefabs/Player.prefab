@@ -619,7 +619,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815002274878511901}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -1910,6 +1910,7 @@ GameObject:
   - component: {fileID: 2433992104355062331}
   - component: {fileID: 3488902095983827915}
   - component: {fileID: 2111629165361982373}
+  - component: {fileID: -2188747484126733627}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -1945,6 +1946,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b5479c20d5fb54e9b3f4f7f4249181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   cam: {fileID: 6184283015192032566}
   sensitivity: 0.1
 --- !u!114 &6567268215869276247
@@ -1959,6 +1963,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 188befe9fe7c4cbea49d0bcefd55dd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &2799849026191504165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1971,6 +1978,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f63301235a41d18e18f095230231f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateMachine
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!143 &2433992104355062331
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2026,6 +2036,40 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &-2188747484126733627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272536894850340024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 8004484108037333455}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 0
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
 --- !u!1 &7273294122277704039
 GameObject:
   m_ObjectHideFlags: 0

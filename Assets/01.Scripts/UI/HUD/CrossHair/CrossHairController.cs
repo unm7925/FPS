@@ -11,6 +11,8 @@ public class CrossHairController : MonoBehaviour
     private float spreadScale = 100f;
     
     private WeaponBase weaponBase;
+
+    private Action<HP, WeaponSwitcher> onSpawnedHandler;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     public void Init(WeaponSwitcher _weaponSwitcher)
@@ -20,11 +22,19 @@ public class CrossHairController : MonoBehaviour
         weaponSwitcher.OnWeaponChanged += SetCrossHair;
         weaponBase = weaponSwitcher.currentWeapon;
     }
-    
+    private void OnEnable()
+    {
+        onSpawnedHandler = (hp, switcher) => Init(switcher); 
+        PlayerController.OnLocalPlayerSpawned += onSpawnedHandler;
+    }
 
     private void OnDisable()
     {
-        weaponSwitcher.OnWeaponChanged -= SetCrossHair;
+        if (weaponSwitcher != null) 
+        {
+            weaponSwitcher.OnWeaponChanged -= SetCrossHair;
+        }
+        PlayerController.OnLocalPlayerSpawned -= onSpawnedHandler;
     }
 
     private void Update()

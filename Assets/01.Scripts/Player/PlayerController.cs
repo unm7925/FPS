@@ -5,10 +5,12 @@ using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private float sensitivity;
+
+    public static event Action<HP, WeaponSwitcher> OnLocalPlayerSpawned;
     
     private Animator animator;
     
@@ -62,15 +64,22 @@ public class PlayerController : MonoBehaviour
         weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
         hp = GetComponent<HP>();
         
-        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        cam.enabled = true;
+        AudioListener audioListener = cam.GetComponent<AudioListener>();
+        audioListener.enabled = true;
+        OnLocalPlayerSpawned?.Invoke(hp,weaponSwitcher);
     }
 
     private void Start()
     {
-        gameObject.SetActive(false);
-        return; // 버그막기용
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+       
         StandardSet();
     }
 
@@ -89,6 +98,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+        
         UpdateCameraPos();
 
         if (animator == null) return;
@@ -121,6 +132,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!isLocalPlayer && NetworkManager.singleton.isNetworkActive) return;
         Look();
     }
     void StandardSet()

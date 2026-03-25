@@ -24,7 +24,7 @@ public class ObjectPool<T> where T : Component
             
             for (int i = 0; i < count; i++) 
             {
-                T go = GameObject.Instantiate(prefab,parent);
+                T go = GameObject.Instantiate(prefab,parent.position,parent.rotation,null);
                 go.gameObject.SetActive(false);
                 objectPool.Enqueue(go);
             }

@@ -1,6 +1,7 @@
 ﻿
 using System.Collections;
 using DG.Tweening;
+using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -49,14 +50,14 @@ public class GameResultUI:MonoBehaviour
         {
                 yield return null;
                 
-                canvasGroup.DOFade(0.2f, fadeTiemr);
+                canvasGroup.DOFade(0.3f, fadeTiemr);
                 yield return new WaitForSeconds(fadeTiemr);
                 canvasGroup.DOFade(1, timer);
                 
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 yield return new WaitForSeconds(timer);
-                SceneManager.LoadScene(0);
+                NetworkManager.singleton.StopHost();
         }
 
 }

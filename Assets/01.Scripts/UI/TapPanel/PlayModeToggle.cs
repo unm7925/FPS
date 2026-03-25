@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,7 +35,8 @@ public class PlayModeToggle:MonoBehaviour
                 }
                 else 
                 {
-                        SceneManager.LoadScene(1);
+                        NetworkManager.singleton.StartHost();
+                        NetworkManager.singleton.ServerChangeScene("InGameScene");
                 }
         }
 

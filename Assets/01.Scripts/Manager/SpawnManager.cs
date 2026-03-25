@@ -1,45 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 public class SpawnManager: MonoBehaviour
 {
         [SerializeField] RoundManager roundManager;
-        [SerializeField] HUDController hudController;
-        [SerializeField] CrossHairController crossHairController;
         [SerializeField] private GameObject enemyPrefab;
-        [SerializeField] private GameObject playerPrefab;
         [SerializeField] private Transform spawnBTeam;
         [SerializeField] private Transform spawnATeam;
         
-        ObjectPool<PlayerController> playerPool = new ObjectPool<PlayerController>();
+        public RoundManager RoundManager => roundManager;
+        public Transform SpawnATeam => spawnATeam;
+        public Transform SpawnBTeam => spawnBTeam;
+
+        private bool isPlayer;
+        
         ObjectPool<AIController> aiPool = new ObjectPool<AIController>();
         
         List<AIController> teamBList = new List<AIController>();
-        List<PlayerController> teamAList = new List<PlayerController>();
 
         public event Action OnSpawnComplete;
-        
-        private Vector3 spawnPosPlus = Vector3.right;
         // 아직 멀티 구현안해서 적만 소환
         private int playerCount;
-
-        private bool IsSet;
-
+        
         private void Awake()
         {
+                var customManager = (NetworkManager.singleton as CustomNetworkManager);
+                if (customManager != null) 
+                {
+                        customManager.RegisterSpawnManager(this);
+                }
+                
                 playerCount = GameManager.Instance.matchData.playersPerTeam;
                 
                 AIController aiController = enemyPrefab.GetComponent<AIController>();
                 aiPool.Init(aiController,playerCount,spawnBTeam);
-                
-                PlayerController playerController = playerPrefab.GetComponent<PlayerController>();
-                playerPool.Init(playerController,playerCount,spawnATeam);
-                
-                
-        }
-        private void Start()
-        {
-                
         }
 
         private void OnEnable()
@@ -54,6 +49,20 @@ public class SpawnManager: MonoBehaviour
         }
         private void Spawn()
         {
+                if(isPlayer) 
+                {
+                        var teamDick = (NetworkManager.singleton as CustomNetworkManager).teamDict;
+                        foreach (var v in (NetworkManager.singleton as CustomNetworkManager).playerObjs) 
+                        {
+                                v.Value.SetActive(true);
+                                HP hp = v.Value.GetComponent<HP>();
+                                hp.Init();
+                                GameManager.Instance.RegisterTeam(v.Value, teamDick[v.Key]);
+                                v.Value.transform.position = teamDick[v.Key] == 
+                                                             GameManager.Team.TeamA ? spawnATeam.position : spawnBTeam.position;
+                        }
+                }
+                
                 for (int i = 0; i < playerCount; i++) 
                 {
                         AIController go = aiPool.Get();
@@ -61,42 +70,28 @@ public class SpawnManager: MonoBehaviour
                         HP hp = go.GetComponent<HP>();
                         hp.Init();
                         GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
-                        go.gameObject.transform.SetParent(null);
                         teamBList.Add(go);
-                }
-                for (int i = 0; i < 1; i++) 
-                {
-                        PlayerController player = playerPool.Get();
-                        player.transform.position = spawnATeam.position;
-                        HP hp = player.GetComponent<HP>();
-                        hp.Init();
-                        GameManager.Instance.RegisterTeam(player.gameObject, GameManager.Team.TeamA);
-                        player.gameObject.transform.SetParent(null);
-                        teamAList.Add(player);
-                        if (IsSet == false) 
-                        {
-                                hudController.Init(player.GetComponent<HP>(),player.GetComponentInChildren<WeaponSwitcher>());
-                                crossHairController.Init(player.GetComponentInChildren<WeaponSwitcher>());
-                                StatsManager.Instance.RegisterPlayer(player.gameObject);
-                                IsSet = true;
-                        }
                 }
                 
                 OnSpawnComplete?.Invoke();
+                if(!isPlayer)
+                        isPlayer = true;
         }
 
         private void Despawn()
         {
-                foreach (PlayerController player in teamAList) 
+                foreach (var v in (NetworkManager.singleton as CustomNetworkManager).playerObjs) 
                 {
-                        playerPool.Return(player);        
+                        if (v.Value == null) return;
+                        v.Value.SetActive(false);
                 }
                 foreach (AIController ai in teamBList)
                 {
+                        if (ai == null) return;
                         aiPool.Return(ai);
                 }
-                teamAList.Clear();
                 teamBList.Clear();
                 GameManager.Instance.ClearTeams();
         }
+        
 }

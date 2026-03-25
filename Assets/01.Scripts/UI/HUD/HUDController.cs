@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 public class HUDController:MonoBehaviour
 {
@@ -11,11 +10,17 @@ public class HUDController:MonoBehaviour
 
         private WeaponBase currentWeapon;
 
+        private void OnEnable()
+        {
+                PlayerController.OnLocalPlayerSpawned += Init;
+        }
+
         public void Init(HP _hp, WeaponSwitcher _weaponSwitcher)
         {
                 hp = _hp;
                 
                 weaponSwitcher = _weaponSwitcher;
+                
                 EventConnection();
                 SwitchWeaponEvent(weaponSwitcher.currentWeapon);
                 UpdateHP(hp.maxHP);
@@ -30,10 +35,13 @@ public class HUDController:MonoBehaviour
         
         private void OnDisable()
         {
-                hp.OnHPChanged -= UpdateHP;
-                weaponSwitcher.OnWeaponChanged -= SwitchWeaponEvent;
-                if (currentWeapon == null) return;
-                currentWeapon.OnAmmoChanged -= UpdateAmmo;
+                PlayerController.OnLocalPlayerSpawned -= Init;
+                if(hp !=null)
+                        hp.OnHPChanged -= UpdateHP;
+                if(weaponSwitcher !=null)
+                        weaponSwitcher.OnWeaponChanged -= SwitchWeaponEvent;
+                if (currentWeapon != null) 
+                        currentWeapon.OnAmmoChanged -= UpdateAmmo;
         }
         private void SwitchWeaponEvent(WeaponBase weaponBase)
         {
