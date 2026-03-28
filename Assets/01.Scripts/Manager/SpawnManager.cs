@@ -63,14 +63,17 @@ public class SpawnManager: MonoBehaviour
                         }
                 }
                 
-                for (int i = 0; i < playerCount; i++) 
+                if(!SessionData.isMultiplayer) 
                 {
-                        AIController go = aiPool.Get();
-                        go.transform.position = spawnBTeam.position;
-                        HP hp = go.GetComponent<HP>();
-                        hp.Init();
-                        GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
-                        teamBList.Add(go);
+                        for (int i = 0; i < playerCount; i++) 
+                        {
+                                AIController go = aiPool.Get();
+                                go.transform.position = spawnBTeam.position;
+                                HP hp = go.GetComponent<HP>();
+                                hp.Init();
+                                GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
+                                teamBList.Add(go);
+                        }
                 }
                 
                 OnSpawnComplete?.Invoke();
@@ -85,10 +88,13 @@ public class SpawnManager: MonoBehaviour
                         if (v.Value == null) return;
                         v.Value.SetActive(false);
                 }
-                foreach (AIController ai in teamBList)
+                if(!SessionData.isMultiplayer) 
                 {
-                        if (ai == null) return;
-                        aiPool.Return(ai);
+                        foreach (AIController ai in teamBList) 
+                        {
+                                if (ai == null) return;
+                                aiPool.Return(ai);
+                        }
                 }
                 teamBList.Clear();
                 GameManager.Instance.ClearTeams();

@@ -12,5 +12,6 @@ public class MatchData : ScriptableObject
     };
     
     public MatchType matchType;
+    
     public int playersPerTeam;
 }

@@ -9,6 +9,7 @@ public class PlayModeToggle:MonoBehaviour
         [SerializeField] private GameObject multiPanel;
         [SerializeField] private TextMeshProUGUI modeTxt;
         [SerializeField] private Slider slider;
+        
         private float modeChangeDuration = 1f;
         private bool isMulti;
 
@@ -17,11 +18,13 @@ public class PlayModeToggle:MonoBehaviour
                 isMulti = !isMulti;
                 if (isMulti) 
                 {
+                        SessionData.isMultiplayer = true;
                         slider.DOValue(1,modeChangeDuration);
                         modeTxt.text = "Multi";
                 }
                 else 
                 {
+                        SessionData.isMultiplayer = false;
                         slider.DOValue(0,modeChangeDuration);
                         modeTxt.text = "Single";
                 }
