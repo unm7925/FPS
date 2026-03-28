@@ -7,6 +7,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : NetworkBehaviour
 {
+    [SyncVar] public GameManager.Team myTeam;
+    
     [SerializeField] private Camera cam;
     [SerializeField] private float sensitivity;
 
@@ -75,6 +77,12 @@ public class PlayerController : NetworkBehaviour
         cam.enabled = true;
         AudioListener audioListener = cam.GetComponent<AudioListener>();
         audioListener.enabled = true;
+
+        Hitbox[] hitboxes = GetComponentsInChildren<Hitbox>();
+        foreach (Hitbox hitbox in hitboxes) 
+        {
+            hitbox.gameObject.layer = LayerMask.NameToLayer("SelfHitbox");
+        }
         OnLocalPlayerSpawned?.Invoke(hp,weaponSwitcher);
     }
 
@@ -98,7 +106,7 @@ public class PlayerController : NetworkBehaviour
     
     private void UnregisterPlayer(GameObject go)
     {
-        GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamA, go);
+        GameManager.Instance.UnRegisterEnemies(myTeam, go);
     }
     
     private void HandleWeaponChanged(WeaponBase obj)

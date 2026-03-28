@@ -9,7 +9,7 @@ public enum BotDifficulty
         Normal,
         Hard
 }
-public class AIController : MonoBehaviour
+public class AIController : MonoBehaviour, IPoolable
 {
         private EnemyStateMachine enemyStateMachine;
         public Animator animator {get; private set;}
@@ -162,6 +162,22 @@ public class AIController : MonoBehaviour
                         transform.Rotate(Vector3.up, speed * Time.deltaTime);
                         yield return null;
                 }
+        }
+        public void OnSpawn()
+        {
+                currentTarget = null;
+                enemyStateMachine.ChangeState(enemyStateMachine.enemyPatrolState);
+                agent.isStopped = false;
+                agent.updateRotation = true;
+                hp.Init();
+                
+        }
+        public void OnReturn()
+        {
+                StopAllCoroutines();
+                if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
+                agent.isStopped = true;
+                agent.ResetPath();
         }
 }
 

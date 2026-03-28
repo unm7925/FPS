@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using UnityEngine.AI;
 public class SpawnManager: MonoBehaviour
 {
         [SerializeField] RoundManager roundManager;
@@ -12,6 +13,10 @@ public class SpawnManager: MonoBehaviour
         public RoundManager RoundManager => roundManager;
         public Transform SpawnATeam => spawnATeam;
         public Transform SpawnBTeam => spawnBTeam;
+
+        private AIController aiController;
+
+        private bool poolInit = false;
 
         private bool isPlayer;
         
@@ -33,8 +38,8 @@ public class SpawnManager: MonoBehaviour
                 
                 playerCount = GameManager.Instance.matchData.playersPerTeam;
                 
-                AIController aiController = enemyPrefab.GetComponent<AIController>();
-                aiPool.Init(aiController,playerCount,spawnBTeam);
+                aiController = enemyPrefab.GetComponent<AIController>();
+                
         }
 
         private void OnEnable()
@@ -54,23 +59,28 @@ public class SpawnManager: MonoBehaviour
                         var teamDick = (NetworkManager.singleton as CustomNetworkManager).teamDict;
                         foreach (var v in (NetworkManager.singleton as CustomNetworkManager).playerObjs) 
                         {
+                                v.Value.transform.position = teamDick[v.Key] == 
+                                                             GameManager.Team.TeamA ? spawnATeam.position : spawnBTeam.position;
                                 v.Value.SetActive(true);
                                 HP hp = v.Value.GetComponent<HP>();
                                 hp.Init();
                                 GameManager.Instance.RegisterTeam(v.Value, teamDick[v.Key]);
-                                v.Value.transform.position = teamDick[v.Key] == 
-                                                             GameManager.Team.TeamA ? spawnATeam.position : spawnBTeam.position;
                         }
                 }
                 
                 if(!SessionData.isMultiplayer) 
                 {
+                        if(!poolInit) 
+                        {
+                                aiPool.Init(aiController, playerCount, spawnBTeam);
+                                poolInit = true;
+                        }
+                        
                         for (int i = 0; i < playerCount; i++) 
                         {
                                 AIController go = aiPool.Get();
                                 go.transform.position = spawnBTeam.position;
-                                HP hp = go.GetComponent<HP>();
-                                hp.Init();
+                                NetworkServer.Spawn(go.gameObject);
                                 GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
                                 teamBList.Add(go);
                         }
@@ -93,6 +103,7 @@ public class SpawnManager: MonoBehaviour
                         foreach (AIController ai in teamBList) 
                         {
                                 if (ai == null) return;
+                                NetworkServer.UnSpawn(ai.gameObject);
                                 aiPool.Return(ai);
                         }
                 }

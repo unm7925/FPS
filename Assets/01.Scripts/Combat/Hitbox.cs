@@ -7,6 +7,8 @@ public enum HitboxType
     Limb
 }
 
+
+
 public class Hitbox:MonoBehaviour
 {
     [SerializeField] private HitboxType hitboxType;

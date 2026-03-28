@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3987182226737997707}
   - component: {fileID: 2896746554311847221}
   - component: {fileID: 2546880541708937668}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4745649867026528399}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 2487385804664231516}
   - component: {fileID: 7675639180455403738}
   - component: {fileID: 5971051123404652013}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 2237998417791509997}
   - component: {fileID: 4419147050264747816}
   - component: {fileID: 8459229512176262432}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 757227592715864523}
   - component: {fileID: 4015623130846742227}
   - component: {fileID: 6535466773672104343}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunWeapon
   hitboxLayer:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 0
   weaponData: {fileID: 11400000, guid: 4a26184ec2b8b394f9427339eb8d4293, type: 2}
 --- !u!114 &4682149044655987533
 MonoBehaviour:
@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 2926504608743071884}
   - component: {fileID: 3305344010081954883}
   - component: {fileID: 2123669258226414099}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

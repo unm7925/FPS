@@ -35,6 +35,11 @@ public class WeaponSwitcher : MonoBehaviour
         playerInputHandler.OnWeaponDrop -= DropWeapon;
     }
 
+    private void Start()
+    {
+        OnWeaponChanged?.Invoke(currentWeapon);
+    }
+
     private void DefaultWeaponSet()
     {
         GameObject weapon = Instantiate(defaultWeaponData.prefab, weaponHolder);
@@ -103,12 +108,13 @@ public class WeaponSwitcher : MonoBehaviour
 
     private void DropSet()
     {
+        currentWeapon.gameObject.transform.SetParent(null);
+        currentWeapon.transform.position = transform.position + transform.forward * 1f;
         currentWeapon.gameObject.AddComponent<Rigidbody>();
         currentWeapon.gameObject.AddComponent<BoxCollider>();
         SphereCollider collider = currentWeapon.gameObject.AddComponent<SphereCollider>();
         collider.isTrigger = true;
         collider.radius = 1f;
         currentWeapon.gameObject.AddComponent<DroppedWeapon>();
-        currentWeapon.gameObject.transform.SetParent(null);
     }
 }

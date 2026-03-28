@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5676937553018626144}
   - component: {fileID: 7447771055659822444}
   - component: {fileID: 2813973397371673156}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Semi_Automatic_Pistol_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 1127179793356621689}
   - component: {fileID: 3801199523615671705}
   - component: {fileID: 1589835363349416354}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Semi_Automatic_Pistol_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 8139394498650565661}
   - component: {fileID: 4431405607451057718}
   - component: {fileID: 4015366783583109596}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunWeapon
   hitboxLayer:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 0
   weaponData: {fileID: 11400000, guid: 2ea04ffc16333814ab46d5ff1ef9421f, type: 2}
 --- !u!120 &4431405607451057718
 LineRenderer:
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 1254905229183360254}
   - component: {fileID: 1376964521378684986}
   - component: {fileID: 1023248544479380725}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Semi_Automatic_Pistol_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,7 +491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1537574829905414498}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 6813209208772685506}
   - component: {fileID: 7226779156155334342}
   - component: {fileID: 5611617593152289272}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Semi_Automatic_Pistol_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

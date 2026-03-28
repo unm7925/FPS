@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 576861222814368466}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 6482212302579766434}
   - component: {fileID: 8713415053520582266}
   - component: {fileID: 2857610868884967330}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 3787199545561536554}
   - component: {fileID: 7699421179190618531}
   - component: {fileID: 8927542647235610351}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 3976871047085959070}
   - component: {fileID: 4094491480063937578}
   - component: {fileID: 1110371688019801998}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 6182371101105747654}
   - component: {fileID: 5754600365406166830}
   - component: {fileID: 4046622007414392515}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +527,7 @@ GameObject:
   - component: {fileID: 1243307338227508878}
   - component: {fileID: 6892734165560207123}
   - component: {fileID: 6078137337377519143}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Assault_Rifle_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

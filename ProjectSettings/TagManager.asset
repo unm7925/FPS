@@ -16,14 +16,14 @@ TagManager:
   - 
   - Water
   - UI
-  - ATeamHitBox
-  - BTeamHitBox
+  - SelfHitbox
+  - Hitbox
   - First Person Weapon
   - Physics Shell
   - Enemy
   - Obstacle
   - Player
-  - 
+  - Weapon
   - 
   - 
   - 

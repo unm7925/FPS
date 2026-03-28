@@ -15,6 +15,12 @@ public class BulletEffectHandler:MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        lineRenderer.enabled = false;
+    }
+
     public void ShowTracer( Vector3 to)
     {
         if (!gameObject.activeInHierarchy) return;
@@ -23,6 +29,7 @@ public class BulletEffectHandler:MonoBehaviour
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(0, muzzle.position);
         lineRenderer.SetPosition(1, to);
+        StopAllCoroutines();
         StartCoroutine(DeleteTracer());
     }
     private IEnumerator DeleteTracer()

@@ -30,12 +30,14 @@ public class CustomNetworkManager : NetworkManager
             go.transform.position = aTeamPos.position;
             GameManager.Instance.RegisterTeam(go.gameObject,GameManager.Team.TeamA);
             teamDict.Add(conn, GameManager.Team.TeamA);
+            go.GetComponent<PlayerController>().myTeam = GameManager.Team.TeamA;
         }
         else 
         {
             go.transform.position = bTeamPos.position;
             GameManager.Instance.RegisterTeam(go.gameObject,GameManager.Team.TeamB);
             teamDict.Add(conn, GameManager.Team.TeamB);
+            go.GetComponent<PlayerController>().myTeam = GameManager.Team.TeamB;
         }
         playerObjs.Add(conn, go);
         NetworkServer.AddPlayerForConnection(conn, go.gameObject);

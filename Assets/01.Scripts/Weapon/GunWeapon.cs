@@ -26,16 +26,16 @@ public class GunWeapon:WeaponBase
             Vector3 camDir = cam.transform.right * offSet.x + cam.transform.up * offSet.y;
             Vector3 direction = (ray.direction + camDir).normalized;
 
-            if (Physics.Raycast(ray.origin , direction, out RaycastHit hit, range,hitboxLayer )) 
+            if (Physics.Raycast(ray.origin , direction, out RaycastHit hit, range,~hitboxLayer )) 
             {
                 Hitbox hitbox = hit.collider.GetComponent<Hitbox>();
                 HP targetHp = hit.collider.GetComponentInParent<HP>();
 
                 if (targetHp != null) 
                 {
-                    int finalDamage = hitbox != null ? hitbox.CalcDamage(damage) : damage;
+                        int finalDamage = hitbox != null ? hitbox.CalcDamage(damage) : damage;
 
-                    OnDamageDealt?.Invoke(targetHp.netId,finalDamage);
+                        OnDamageDealt?.Invoke(targetHp.netId, finalDamage);
                 }
 
                 effectHandler.ShowTracer(hit.point); 
