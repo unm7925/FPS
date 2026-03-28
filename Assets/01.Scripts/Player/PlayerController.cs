@@ -21,6 +21,7 @@ public class PlayerController : NetworkBehaviour
     private PlayerInputHandler inputHandler;
     private CharacterController controller;
     private HP hp;
+    private GunWeapon currentWeapon;
 
     Vector3 velocity = Vector3.zero;
     Vector3 horizontalVelocity = Vector3.zero;
@@ -86,16 +87,31 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         hp.OnDie += UnregisterPlayer;
+        weaponSwitcher.OnWeaponChanged += HandleWeaponChanged;
     }
+    
     private void OnDisable()
     {
         hp.OnDie -=  UnregisterPlayer;
+        weaponSwitcher.OnWeaponChanged -= HandleWeaponChanged;
     }
+    
     private void UnregisterPlayer(GameObject go)
     {
         GameManager.Instance.UnRegisterEnemies(GameManager.Team.TeamA, go);
     }
-
+    
+    private void HandleWeaponChanged(WeaponBase obj)
+    {
+        if(currentWeapon != null) 
+            currentWeapon.OnDamageDealt -= CmdApplyDamage;
+        
+        currentWeapon = obj as GunWeapon;
+        
+        if(currentWeapon != null)
+            currentWeapon.OnDamageDealt += CmdApplyDamage;
+    }
+    
     void Update()
     {
         if (!isLocalPlayer) return;
@@ -132,7 +148,7 @@ public class PlayerController : NetworkBehaviour
 
     private void LateUpdate()
     {
-        if (!isLocalPlayer && NetworkManager.singleton.isNetworkActive) return;
+        if (!isLocalPlayer) return;
         Look();
     }
     void StandardSet()
@@ -281,5 +297,13 @@ public class PlayerController : NetworkBehaviour
         cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         
         transform.Rotate(Vector3.up, inputHandler.Look.x * sensitivity);
+    }
+
+    [Command]
+    private void CmdApplyDamage(uint targetNetId, int damage)
+    {
+        GameObject attcker = connectionToClient.identity.gameObject;
+        HP target = NetworkServer.spawned[targetNetId].gameObject.GetComponent<HP>();
+        target.TakeDamage(damage,attcker);
     }
 }

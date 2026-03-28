@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using Mirror;
+using UnityEngine;
+using Random = UnityEngine.Random;
 public class GunWeapon:WeaponBase
 {
+    public event Action<uint,int> OnDamageDealt;
     
     public override void Fire()
     {
         if (currentAmmo == 0 || isReloading) return;
         if (Time.time - lastFireTime < fireRate) return;
-        if (cam == null) {
+        
+        if (cam == null) 
+        {
             cam = Camera.main;
         }
-        
+
         anim.Play("Fire");
 
-        if (cam != null) {
+        if (cam != null) 
+        {
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
             Vector2 offSet = Random.insideUnitCircle * finalSpread;
@@ -23,20 +30,17 @@ public class GunWeapon:WeaponBase
             {
                 Hitbox hitbox = hit.collider.GetComponent<Hitbox>();
                 HP targetHp = hit.collider.GetComponentInParent<HP>();
-                if(hitbox != null) 
+
+                if (targetHp != null) 
                 {
-                    hitbox.ApplyDamage(damage,targetHp,transform.root.gameObject);
+                    int finalDamage = hitbox != null ? hitbox.CalcDamage(damage) : damage;
+
+                    OnDamageDealt?.Invoke(targetHp.netId,finalDamage);
                 }
-                else 
-                {
-                    IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-                    if (damageable != null) 
-                    {
-                        damageable.TakeDamage(damage,transform.root.gameObject);
-                    }
-                }
-                effectHandler.ShowTracer(hit.point);
+
+                effectHandler.ShowTracer(hit.point); 
                 effectHandler.ShowImpact(hit);
+                
             }
             else 
             {

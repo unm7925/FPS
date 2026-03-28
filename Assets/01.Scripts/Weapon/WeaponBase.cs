@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Mirror;
 using UnityEngine;
 
 
@@ -13,6 +14,7 @@ public abstract class WeaponBase:MonoBehaviour
         };
         [SerializeField] protected LayerMask hitboxLayer;
         [SerializeField] protected WeaponData weaponData;
+        
         protected BulletEffectHandler effectHandler;
         public WeaponData.WeaponType weaponType {get; protected set;}
         

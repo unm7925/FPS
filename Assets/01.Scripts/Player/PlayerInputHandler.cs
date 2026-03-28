@@ -56,6 +56,7 @@ public class PlayerInputHandler:NetworkBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
         Move = actions.Player.Move.ReadValue<Vector2>();
         Look = actions.Player.Look.ReadValue<Vector2>();
     }

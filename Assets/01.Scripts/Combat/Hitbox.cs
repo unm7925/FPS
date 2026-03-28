@@ -16,7 +16,6 @@ public class Hitbox:MonoBehaviour
 
     public void ApplyDamage(int damage,HP targetHP, GameObject attacker)
     {
-        
         switch(hitboxType) 
         {
             case HitboxType.Head :
@@ -32,6 +31,21 @@ public class Hitbox:MonoBehaviour
                 Debug.Log(damage*damageLimbMul);
                 break;
         }
+    }
+
+    public int CalcDamage(int baseDamage)
+    {
+        switch(hitboxType) 
+        {
+            case HitboxType.Head :
+                return (int)(baseDamage * damageHeadMul);
+            case HitboxType.Body :
+                return (int)(baseDamage * damageBodyMul);
+            case HitboxType.Limb :
+                return  (int)(baseDamage * damageLimbMul);
+        }
+
+        return baseDamage;
     }
 }
 
