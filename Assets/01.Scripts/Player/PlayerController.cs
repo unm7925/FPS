@@ -9,14 +9,13 @@ public class PlayerController : NetworkBehaviour
 {
     [SyncVar] public GameManager.Team myTeam;
     
-    [SerializeField] private Camera cam;
     [SerializeField] private float sensitivity;
+
+    [SerializeField] private Transform cameraMount;
 
     public static event Action<HP, WeaponSwitcher> OnLocalPlayerSpawned;
     
     private Animator animator;
-    
-    private float xRotation=0;
 
     private WeaponSwitcher weaponSwitcher;
     private PlayerStateMachine stateMachine;
@@ -35,14 +34,9 @@ public class PlayerController : NetworkBehaviour
     
     private float crunchHeight = 1.5f;
     private Vector3 crunchCenter = new Vector3(0,-0.25f,0);
-    private Vector3 crunchCamPos = new Vector3(0,1f,0);
-
-    private Vector3 targetCamPos = Vector3.zero;
-    private Vector3 currentCamPos = Vector3.zero;
-
-    private float cameraSpeed = 5f;
+    private Vector3 crunchCamPos = new Vector3(0,2f,0);
     
-    private Vector3 standCamPos;
+    private Vector3 standCamPos = new Vector3(0,3f,0);
     private float standHeight;
     
     private float jumpForce = 7f;
@@ -74,10 +68,11 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        cam.enabled = true;
-        AudioListener audioListener = cam.GetComponent<AudioListener>();
-        audioListener.enabled = true;
-
+        
+        CameraManager.Instance.SetViewTarget(cameraMount);
+        
+        StandardSet();
+        
         Hitbox[] hitboxes = GetComponentsInChildren<Hitbox>();
         foreach (Hitbox hitbox in hitboxes) 
         {
@@ -88,8 +83,7 @@ public class PlayerController : NetworkBehaviour
 
     private void Start()
     {
-       
-        StandardSet();
+        
     }
 
     private void OnEnable()
@@ -124,8 +118,6 @@ public class PlayerController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         
-        UpdateCameraPos();
-
         if (animator == null) return;
         GetCurrentBool();
         if (prevCrouch != isCrunch) 
@@ -157,20 +149,15 @@ public class PlayerController : NetworkBehaviour
     private void LateUpdate()
     {
         if (!isLocalPlayer) return;
-        Look();
+        LookYaw();
     }
     void StandardSet()
     {
         standHeight = controller.height;
-        standCamPos = cam.transform.localPosition;
+        CameraManager.Instance.UpdateTargetPos(standCamPos);
     }
 
-    void UpdateCameraPos()
-    {
-        if (targetCamPos == currentCamPos) return;
-        currentCamPos = cam.transform.localPosition;
-        cam.transform.localPosition = Vector3.Lerp(currentCamPos, targetCamPos, cameraSpeed * Time.deltaTime);
-    }
+   
 
     void IsCrunch()
     {
@@ -178,13 +165,13 @@ public class PlayerController : NetworkBehaviour
         {
             controller.height = crunchHeight;
             controller.center = crunchCenter;
-            targetCamPos = crunchCamPos;
+            CameraManager.Instance.UpdateTargetPos(crunchCamPos);
         }
         else 
         {
             controller.height = standHeight;
             controller.center = Vector3.zero;
-            targetCamPos =  standCamPos;
+            CameraManager.Instance.UpdateTargetPos(standCamPos);
         }
     }
 
@@ -298,12 +285,9 @@ public class PlayerController : NetworkBehaviour
         }
         
     }
-    void Look()
+    void LookYaw()
     {
-        xRotation -= (inputHandler.Look.y * sensitivity);
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        
+        CameraManager.Instance.AddPitch(inputHandler.Look.y);
         transform.Rotate(Vector3.up, inputHandler.Look.x * sensitivity);
     }
 
