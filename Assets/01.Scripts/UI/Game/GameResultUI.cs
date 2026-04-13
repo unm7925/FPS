@@ -3,8 +3,6 @@ using System.Collections;
 using DG.Tweening;
 using Mirror;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameResultUI:MonoBehaviour
 {
@@ -50,7 +48,7 @@ public class GameResultUI:MonoBehaviour
         {
                 yield return null;
                 
-                canvasGroup.DOFade(0.3f, fadeTiemr);
+                canvasGroup.DOFade(0.5f, fadeTiemr);
                 yield return new WaitForSeconds(fadeTiemr);
                 canvasGroup.DOFade(1, timer);
                 

@@ -4,8 +4,9 @@ using UnityEngine;
 public class WeaponSwitcher : MonoBehaviour
 {
     [SerializeField] private WeaponBase[] slots;
-    [SerializeField] private Transform weaponHolder;
     [SerializeField] private WeaponData defaultWeaponData;
+    
+    private Transform weaponHolder;
     private RuntimeAnimatorController defultController;
 
     public event Action<WeaponBase> OnWeaponChanged;
@@ -20,8 +21,6 @@ public class WeaponSwitcher : MonoBehaviour
         playerInputHandler = GetComponentInParent<PlayerInputHandler>();
         animator = GetComponent<Animator>();
         defultController = animator.runtimeAnimatorController;
-        
-        DefaultWeaponSet();
     }
     private void OnEnable()
     {
@@ -40,8 +39,9 @@ public class WeaponSwitcher : MonoBehaviour
         OnWeaponChanged?.Invoke(currentWeapon);
     }
 
-    private void DefaultWeaponSet()
+    public void Init(Transform _weaponHolder)
     {
+        weaponHolder = _weaponHolder;
         GameObject weapon = Instantiate(defaultWeaponData.prefab, weaponHolder);
         currentWeapon = weapon.GetComponent<WeaponBase>();
         currentWeapon.ApplyAnimator();

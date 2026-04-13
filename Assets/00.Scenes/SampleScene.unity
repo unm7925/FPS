@@ -1703,7 +1703,6 @@ GameObject:
   m_Component:
   - component: {fileID: 382153804}
   - component: {fileID: 382153803}
-  - component: {fileID: 382153805}
   m_Layer: 0
   m_Name: NetworkLobby
   m_TagString: Untagged
@@ -1743,18 +1742,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &382153805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 382153802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bb345a591ff4c2d85719314de0ceb83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkLobby
 --- !u!1 &382564941
 GameObject:
   m_ObjectHideFlags: 0
@@ -7099,7 +7086,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 7272536894850340024, guid: 03f0d4342fa0ac444bffc708484e0aa6,
+  playerPrefab: {fileID: 1435593047702455444, guid: a96c6be612db3d749928e46e05abf67b,
     type: 3}
   autoCreatePlayer: 0
   playerSpawnMethod: 0

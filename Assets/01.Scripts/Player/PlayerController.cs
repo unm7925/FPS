@@ -57,8 +57,8 @@ public class PlayerController : NetworkBehaviour
         stateMachine = GetComponent<PlayerStateMachine>();
         inputHandler = GetComponent<PlayerInputHandler>();
         controller = GetComponent<CharacterController>();
-        animator = GetComponentInChildren<Animator>();
-        weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
+        animator = GetComponent<Animator>();
+        weaponSwitcher = GetComponent<WeaponSwitcher>();
         hp = GetComponent<HP>();
         
         Cursor.lockState = CursorLockMode.Locked;
@@ -68,6 +68,8 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
+        
+        weaponSwitcher.Init(CameraManager.Instance.FirstPersonHand);
         
         CameraManager.Instance.SetViewTarget(cameraMount);
         
@@ -79,6 +81,11 @@ public class PlayerController : NetworkBehaviour
             hitbox.gameObject.layer = LayerMask.NameToLayer("SelfHitbox");
         }
         OnLocalPlayerSpawned?.Invoke(hp,weaponSwitcher);
+
+        foreach (var v in GetComponentsInChildren<Renderer>()) 
+        {
+            v.gameObject.layer = LayerMask.NameToLayer("LocalBody");            
+        }
     }
 
     private void Start()
@@ -206,7 +213,7 @@ public class PlayerController : NetworkBehaviour
     void GetCurrentBool()
     {
         isCrunch = inputHandler.Crouch;
-        animator.SetBool("IsCrouching", isCrunch);
+        animator.SetBool("IsCrouched", isCrunch);
         isWalk = inputHandler.Walk;
         
     }
@@ -279,7 +286,6 @@ public class PlayerController : NetworkBehaviour
             horizontalVelocity = Vector3.zero;
             if(isJump) 
             {
-                animator.SetTrigger("IsLanded");
                 isJump = false;
             }
         }

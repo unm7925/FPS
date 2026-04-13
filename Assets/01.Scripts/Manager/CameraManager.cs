@@ -4,6 +4,10 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager Instance;
 
+    [SerializeField] private Transform firstPersonHand;
+    
+    public Transform FirstPersonHand => firstPersonHand; 
+
     private Camera cam;
     
     [SerializeField]private float sensitivity;
@@ -25,6 +29,7 @@ public class CameraManager : MonoBehaviour
             Destroy(this);
         }
         cam = GetComponent<Camera>();
+        cam.cullingMask &= ~LayerMask.GetMask("LocalBody");
     }
 
     private void LateUpdate()
