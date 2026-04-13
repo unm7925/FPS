@@ -64,6 +64,7 @@ public class SpawnManager: MonoBehaviour
                                 HP hp = v.Value.GetComponent<HP>();
                                 hp.Init();
                                 GameManager.Instance.RegisterTeam(v.Value, teamDick[v.Key]);
+                                v.Value.GetComponent<WeaponSwitcher>().RefillAmmmo();
                         }
                 }
                 

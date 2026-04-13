@@ -1,7 +1,6 @@
 using System;
 using Mirror;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -32,11 +31,11 @@ public class PlayerController : NetworkBehaviour
     private bool prevCrouch = false;
     private bool isJump;
     
-    private float crunchHeight = 1.5f;
-    private Vector3 crunchCenter = new Vector3(0,-0.25f,0);
-    private Vector3 crunchCamPos = new Vector3(0,2f,0);
+    private float crunchHeight = 1f;
+    private Vector3 crunchCenter = new Vector3(0,-0.5f,0);
+    private Vector3 crunchCamPos = new Vector3(0,-2.5f,0);
     
-    private Vector3 standCamPos = new Vector3(0,3f,0);
+    private Vector3 standCamPos = Vector3.zero;
     private float standHeight;
     
     private float jumpForce = 7f;
@@ -49,6 +48,8 @@ public class PlayerController : NetworkBehaviour
     private float fallMult = 1f;
     private float lowJumpMult = 1.5f;
     private float airControlMult = 0.3f;
+
+    private bool isDead;
 
     public void OnMove(Vector2 input) => Move(input);
     
@@ -97,6 +98,17 @@ public class PlayerController : NetworkBehaviour
     {
         hp.OnDie += UnregisterPlayer;
         weaponSwitcher.OnWeaponChanged += HandleWeaponChanged;
+
+        if (!isLocalPlayer) return;
+        
+        CameraManager.Instance.SetViewTarget(cameraMount);
+
+        if (isDead) 
+        {
+            weaponSwitcher.ResetToDefault();
+            isDead = false;
+        }
+
     }
     
     private void OnDisable()
@@ -108,6 +120,7 @@ public class PlayerController : NetworkBehaviour
     private void UnregisterPlayer(GameObject go)
     {
         GameManager.Instance.UnRegisterEnemies(myTeam, go);
+        isDead = true;
     }
     
     private void HandleWeaponChanged(WeaponBase obj)
@@ -171,13 +184,13 @@ public class PlayerController : NetworkBehaviour
         if (isCrunch) 
         {
             controller.height = crunchHeight;
-            controller.center = crunchCenter;
+            controller.center = Vector3.up + crunchCenter;
             CameraManager.Instance.UpdateTargetPos(crunchCamPos);
         }
         else 
         {
             controller.height = standHeight;
-            controller.center = Vector3.zero;
+            controller.center = Vector3.up;
             CameraManager.Instance.UpdateTargetPos(standCamPos);
         }
     }

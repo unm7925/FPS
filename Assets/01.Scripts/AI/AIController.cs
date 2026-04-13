@@ -170,7 +170,7 @@ public class AIController : MonoBehaviour, IPoolable
                 agent.isStopped = false;
                 agent.updateRotation = true;
                 hp.Init();
-                
+                currentWeapon.ResetAmmo();
         }
         public void OnReturn()
         {

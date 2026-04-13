@@ -82,6 +82,7 @@ public class CustomNetworkManager : NetworkManager
     public override void OnStopClient()
     {
         base.OnStopClient();
+        SceneManager.LoadScene(0);
     }
     private void InitValue()
     {

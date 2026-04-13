@@ -33,20 +33,13 @@ public class WeaponSwitcher : MonoBehaviour
         playerInputHandler.OnSlotChanged -= SwitchWeapon;
         playerInputHandler.OnWeaponDrop -= DropWeapon;
     }
-
-    private void Start()
-    {
-        OnWeaponChanged?.Invoke(currentWeapon);
-    }
+    
 
     public void Init(Transform _weaponHolder)
     {
         weaponHolder = _weaponHolder;
-        GameObject weapon = Instantiate(defaultWeaponData.prefab, weaponHolder);
-        currentWeapon = weapon.GetComponent<WeaponBase>();
-        currentWeapon.ApplyAnimator();
-        currentSlotIndex = (int)currentWeapon.weaponType;
-        slots[currentSlotIndex] = currentWeapon;
+        DefaultWeaponSet();
+        OnWeaponChanged?.Invoke(currentWeapon);
     }
 
     private void SwitchWeapon(int _slotIndex)
@@ -116,5 +109,34 @@ public class WeaponSwitcher : MonoBehaviour
         collider.isTrigger = true;
         collider.radius = 1f;
         currentWeapon.gameObject.AddComponent<DroppedWeapon>();
+    }
+
+    private void DefaultWeaponSet()
+    {
+        GameObject weapon = Instantiate(defaultWeaponData.prefab, weaponHolder);
+        currentWeapon = weapon.GetComponent<WeaponBase>();
+        currentWeapon.ApplyAnimator();
+        currentSlotIndex = (int)currentWeapon.weaponType;
+        slots[currentSlotIndex] = currentWeapon;
+    }
+    
+    public void ResetToDefault()
+    {
+        for (int i = 0; i < slots.Length; i++) 
+        {
+            if (slots[i] == null) continue;
+            Destroy(slots[i].gameObject);
+            slots[i] = null;
+        }
+        DefaultWeaponSet();
+    }
+
+    public void RefillAmmmo()
+    {
+        foreach (var v in slots) 
+        {
+            if(v == null)  continue;
+            v.ResetAmmo();
+        }
     }
 }

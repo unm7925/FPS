@@ -1865,7 +1865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02716e6d0fd138940918fdeb043393e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraManager
-  firstPersonHand: {fileID: 1840714592}
+  firstPersonHand: {fileID: 2113812205}
   sensitivity: 0.1
 --- !u!4 &1389748919
 Transform:
@@ -3493,6 +3493,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2113812205 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9055240488785279783, guid: a2aed4ecbf62abc48904b18bf6179e61,
+    type: 3}
+  m_PrefabInstance: {fileID: 1840714591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2119777411
 GameObject:
   m_ObjectHideFlags: 0

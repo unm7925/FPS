@@ -168,5 +168,12 @@ public abstract class WeaponBase:MonoBehaviour
                  
                 return spreadIdle;
         }
+
+        public void ResetAmmo()
+        {
+                currentAmmo = magazineSize;
+                reserveAmmo = maxReserve;
+                OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
+        }
 }
 
