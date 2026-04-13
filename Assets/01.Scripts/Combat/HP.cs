@@ -38,13 +38,14 @@ public class HP : NetworkBehaviour,IDamageable
     private void Die(GameObject attacker)
     {
         // 애니메이션
-        StatsManager.Instance.RegisterKill(attacker,gameObject);
-        RpcDie();
+        
+        RpcDie(attacker);
     }
     
     [ClientRpc]
-    private void RpcDie()
+    private void RpcDie(GameObject attacker)
     {
+        StatsManager.Instance.RegisterKill(attacker,gameObject);
         OnDie?.Invoke(gameObject);
         gameObject.SetActive(false);
     }

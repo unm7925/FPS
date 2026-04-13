@@ -76,6 +76,8 @@ public class PlayerController : NetworkBehaviour
         
         StandardSet();
         
+        StatsManager.Instance.RegisterPlayer(gameObject);
+        
         Hitbox[] hitboxes = GetComponentsInChildren<Hitbox>();
         foreach (Hitbox hitbox in hitboxes) 
         {
