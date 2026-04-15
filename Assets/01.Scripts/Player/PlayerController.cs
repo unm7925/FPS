@@ -321,5 +321,9 @@ public class PlayerController : NetworkBehaviour
         target.TakeDamage(damage,attcker);
     }
 
-    public void SetLocked(bool locked)=> isLocked = locked;
+    public void SetLocked(bool locked)
+    {
+        inputHandler.enabled = !locked;
+        this.enabled = !locked;
+    }
 }

@@ -166,6 +166,7 @@ public class AIController : MonoBehaviour, IPoolable
         {
                 currentTarget = null;
                 agent.isStopped = true;
+                SetLocked(true);
                 agent.updateRotation = true;
                 hp.Init();
                 currentWeapon.ResetAmmo();
@@ -176,6 +177,11 @@ public class AIController : MonoBehaviour, IPoolable
                 if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
                 agent.isStopped = true;
                 agent.ResetPath();
+        }
+
+        public void SetLocked(bool locked)
+        {
+                enemyStateMachine.enabled = !locked;
         }
 }
 

@@ -58,6 +58,7 @@ public class SpawnManager: MonoBehaviour
                 foreach (var ai in teamBList) 
                 {
                         ai.agent.isStopped = false;
+                        ai.SetLocked(false);
                 }
         }
         private void OnDisable()
