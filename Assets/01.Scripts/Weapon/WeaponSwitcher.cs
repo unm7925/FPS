@@ -129,6 +129,7 @@ public class WeaponSwitcher : MonoBehaviour
             slots[i] = null;
         }
         DefaultWeaponSet();
+        OnWeaponChanged?.Invoke(currentWeapon);
     }
 
     public void RefillAmmmo()

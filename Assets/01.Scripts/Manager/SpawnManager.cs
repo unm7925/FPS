@@ -81,6 +81,7 @@ public class SpawnManager: MonoBehaviour
                                 AIController go = aiPool.Get();
                                 go.transform.position = spawnBTeam.position;
                                 NetworkServer.Spawn(go.gameObject);
+                                go.OnSpawn();
                                 GameManager.Instance.RegisterTeam(go.gameObject, GameManager.Team.TeamB);
                                 teamBList.Add(go);
                         }

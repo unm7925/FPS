@@ -11,6 +11,8 @@ public class RoundManager : MonoBehaviour
     public event Action OnRoundStart;
     public event Action OnRoundEnd;
 
+    public event Action<int, int> OnScoreUpdated;
+
     Dictionary<GameManager.Team, int> RoundWins = new Dictionary<GameManager.Team, int>();
 
     private void OnEnable()
@@ -41,6 +43,7 @@ public class RoundManager : MonoBehaviour
     private void EndRound(GameManager.Team winner)
     {
         RoundWins[winner]++;
+        OnScoreUpdated?.Invoke(RoundWins[GameManager.Team.TeamA], RoundWins[GameManager.Team.TeamB]);
         OnRoundEnd?.Invoke();
         if (roundsToWin <= RoundWins[winner]) 
         {

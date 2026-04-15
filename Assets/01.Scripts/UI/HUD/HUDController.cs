@@ -1,18 +1,22 @@
 ﻿using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 public class HUDController:MonoBehaviour
 {
         private HP hp;
         private WeaponSwitcher weaponSwitcher;
         
+        [SerializeField] private RoundManager roundManager;
         [SerializeField] private TextMeshProUGUI ammoText;
         [SerializeField] private TextMeshProUGUI HPText;
+        [SerializeField] private TextMeshProUGUI roundScoreText;
 
         private WeaponBase currentWeapon;
 
         private void OnEnable()
         {
                 PlayerController.OnLocalPlayerSpawned += Init;
+                roundManager.OnScoreUpdated += UpdateRoundScore;
         }
 
         public void Init(HP _hp, WeaponSwitcher _weaponSwitcher)
@@ -26,6 +30,11 @@ public class HUDController:MonoBehaviour
                 UpdateHP(hp.maxHP);
                 if (currentWeapon == null) return;
                 UpdateAmmo(currentWeapon.currentAmmo,currentWeapon.reserveAmmo);
+        }
+
+        private void UpdateRoundScore(int teamAScore, int teamBScore)
+        {
+                roundScoreText.text = $"{teamAScore} : {teamBScore}";
         }
         private void EventConnection()
         {
@@ -42,6 +51,8 @@ public class HUDController:MonoBehaviour
                         weaponSwitcher.OnWeaponChanged -= SwitchWeaponEvent;
                 if (currentWeapon != null) 
                         currentWeapon.OnAmmoChanged -= UpdateAmmo;
+                
+                roundManager.OnScoreUpdated -= UpdateRoundScore;
         }
         private void SwitchWeaponEvent(WeaponBase weaponBase)
         {

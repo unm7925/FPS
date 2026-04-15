@@ -14,9 +14,9 @@ public class EnemySight:MonoBehaviour
                 }
                 
                 RaycastHit hit;
-                
-                return Physics.Raycast(transform.position, direction, out hit, sightRange)&&
-                       hit.collider.gameObject.layer == LayerMask.NameToLayer("LocalBody");
+
+                return Physics.Raycast(transform.position, direction, out hit, sightRange) &&
+                       hit.collider.transform.IsChildOf(target.transform);
         }
 }
 

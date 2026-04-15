@@ -39,7 +39,6 @@ public class AIController : MonoBehaviour, IPoolable
         private void OnEnable()
         {
                 hp.OnDie += UnRegisterPlayer;
-                StartDetectTarget();
         }
         private void OnDisable()
         {
@@ -166,7 +165,6 @@ public class AIController : MonoBehaviour, IPoolable
         public void OnSpawn()
         {
                 currentTarget = null;
-                enemyStateMachine.ChangeState(enemyStateMachine.enemyPatrolState);
                 agent.isStopped = false;
                 agent.updateRotation = true;
                 hp.Init();

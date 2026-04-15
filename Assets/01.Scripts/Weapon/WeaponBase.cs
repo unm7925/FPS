@@ -173,6 +173,8 @@ public abstract class WeaponBase:MonoBehaviour
         {
                 currentAmmo = magazineSize;
                 reserveAmmo = maxReserve;
+                isReloading = false;
+                StopAllCoroutines();
                 OnAmmoChanged?.Invoke(currentAmmo, reserveAmmo);
         }
 }

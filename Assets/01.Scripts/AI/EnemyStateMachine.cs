@@ -16,10 +16,10 @@ public class EnemyStateMachine:MonoBehaviour
     {
         aiController = GetComponent<AIController>();
         
-    }
-    private void Start()
-    {
         Initialize();
+    }
+    private void OnEnable()
+    {
         ChangeState(enemyPatrolState);
     }
 
