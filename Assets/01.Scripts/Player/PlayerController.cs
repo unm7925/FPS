@@ -50,6 +50,7 @@ public class PlayerController : NetworkBehaviour
     private float airControlMult = 0.3f;
 
     private bool isDead;
+    private bool isLocked;
 
     public void OnMove(Vector2 input) => Move(input);
     
@@ -138,7 +139,7 @@ public class PlayerController : NetworkBehaviour
     
     void Update()
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer||isLocked) return;
         
         if (animator == null) return;
         GetCurrentBool();
@@ -319,4 +320,6 @@ public class PlayerController : NetworkBehaviour
         HP target = NetworkServer.spawned[targetNetId].gameObject.GetComponent<HP>();
         target.TakeDamage(damage,attcker);
     }
+
+    public void SetLocked(bool locked)=> isLocked = locked;
 }

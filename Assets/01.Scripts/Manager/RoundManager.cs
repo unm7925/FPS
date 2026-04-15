@@ -7,11 +7,15 @@ public class RoundManager : MonoBehaviour
 {
     public int currentRound{get; private set;}
     [SerializeField]private int roundsToWin = 10;
+    private int roundCooldown = 5;
 
     public event Action OnRoundStart;
     public event Action OnRoundEnd;
 
     public event Action<int, int> OnScoreUpdated;
+
+    public event Action<int> OnCountdown;
+    public event Action OnRoundReady;
 
     Dictionary<GameManager.Team, int> RoundWins = new Dictionary<GameManager.Team, int>();
 
@@ -38,6 +42,12 @@ public class RoundManager : MonoBehaviour
         yield return null;
         OnRoundStart?.Invoke();
         currentRound++;
+        for (int i = roundCooldown; i > 0; i--) 
+        {
+            OnCountdown?.Invoke(i);
+            yield return new WaitForSeconds(1f);
+        }
+        OnRoundReady?.Invoke();
     }
 
     private void EndRound(GameManager.Team winner)

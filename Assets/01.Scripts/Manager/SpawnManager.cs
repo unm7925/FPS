@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mirror;
+using Mirror.BouncyCastle.Bcpg;
 using UnityEngine;
 public class SpawnManager: MonoBehaviour
 {
@@ -45,11 +46,25 @@ public class SpawnManager: MonoBehaviour
         {
                 roundManager.OnRoundEnd += Despawn;
                 roundManager.OnRoundStart += Spawn;
+                roundManager.OnRoundReady += UnlockPlayers;
+        }
+        private void UnlockPlayers()
+        {
+                foreach (var v in (NetworkManager.singleton as CustomNetworkManager).playerObjs)
+                {
+                        v.Value.GetComponent<PlayerController>().SetLocked(false);                        
+                }
+
+                foreach (var ai in teamBList) 
+                {
+                        ai.agent.isStopped = false;
+                }
         }
         private void OnDisable()
         {
                 roundManager.OnRoundEnd -= Despawn;
                 roundManager.OnRoundStart -= Spawn;
+                roundManager.OnRoundReady -= UnlockPlayers;
         }
         private void Spawn()
         {
@@ -65,6 +80,14 @@ public class SpawnManager: MonoBehaviour
                                 hp.Init();
                                 GameManager.Instance.RegisterTeam(v.Value, teamDick[v.Key]);
                                 v.Value.GetComponent<WeaponSwitcher>().RefillAmmmo();
+                                v.Value.GetComponent<PlayerController>().SetLocked(true);
+                        }
+                }
+                else 
+                {
+                        foreach (var v in (NetworkManager.singleton as CustomNetworkManager).playerObjs) 
+                        {
+                                v.Value.GetComponent<PlayerController>().SetLocked(true);
                         }
                 }
                 

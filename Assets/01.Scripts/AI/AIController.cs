@@ -165,7 +165,7 @@ public class AIController : MonoBehaviour, IPoolable
         public void OnSpawn()
         {
                 currentTarget = null;
-                agent.isStopped = false;
+                agent.isStopped = true;
                 agent.updateRotation = true;
                 hp.Init();
                 currentWeapon.ResetAmmo();
