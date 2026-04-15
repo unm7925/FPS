@@ -69,4 +69,10 @@ public class CameraManager : MonoBehaviour
     {
         currentTargetCamPos = _target;
     }
+
+    public void TeleportToTarget()
+    {
+        if (currentTarget == null) return;
+        cam.transform.position = currentTargetCamPos + currentTarget.position;
+    }
 }

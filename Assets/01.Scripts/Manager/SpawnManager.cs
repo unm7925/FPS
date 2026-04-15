@@ -75,6 +75,7 @@ public class SpawnManager: MonoBehaviour
                         {
                                 v.Value.transform.position = teamDick[v.Key] == 
                                                              GameManager.Team.TeamA ? spawnATeam.position : spawnBTeam.position;
+                                CameraManager.Instance.TeleportToTarget();
                                 v.Value.SetActive(true);
                                 HP hp = v.Value.GetComponent<HP>();
                                 hp.Init();
